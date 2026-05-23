@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐作品集</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-avatar"></div>
+        <div class="nav-more"></div>
+    </nav>
+
+    <div class="container">
+        <!-- 左侧上：双卡片列表 -->
+        <div class="sidebar-top">
+            <div class="card" onclick="goToDetail('song1')">
+                <div class="card-thumb">
+                    <img src="https://picsum.photos/400/200?random=1" alt="歌曲1">
+                </div>
+                <div class="card-info">
+                    <div class="card-line"></div>
+                    <div class="card-line"></div>
+                    <div class="card-dot"></div>
+                </div>
+            </div>
+            <div class="card" onclick="goToDetail('song2')">
+                <div class="card-thumb">
+                    <img src="https://picsum.photos/400/200?random=2" alt="歌曲2">
+                </div>
+                <div class="card-info">
+                    <div class="card-line"></div>
+                    <div class="card-line"></div>
+                    <div class="card-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 左侧下：列表 -->
+        <div class="sidebar-bottom">
+            <div class="list-item" onclick="goToDetail('song3')">
+                <img src="https://picsum.photos/80/80?random=3" alt="歌曲3">
+                <div class="list-text">
+                    <div class="list-line"></div>
+                    <div class="list-line"></div>
+                </div>
+                <div class="list-dot"></div>
+            </div>
+            <div class="list-item" onclick="goToDetail('song4')">
+                <img src="https://picsum.photos/80/80?random=4" alt="歌曲4">
+                <div class="list-text">
+                    <div class="list-line"></div>
+                    <div class="list-line"></div>
+                </div>
+                <div class="list-dot"></div>
+            </div>
+            <div class="list-item" onclick="goToDetail('song5')">
+                <img src="https://picsum.photos/80/80?random=5" alt="歌曲5">
+                <div class="list-text">
+                    <div class="list-line"></div>
+                    <div class="list-line"></div>
+                </div>
+                <div class="list-dot"></div>
+            </div>
+        </div>
+
+        <!-- 主内容区：大图卡片（放你的letter.png） -->
+        <div class="main-content">
+            <div class="main-card" onclick="goToDetail('song6')">
+                <div class="main-thumb">
+                    <img src="./picture/letter.png" alt="歌曲6">
+                </div>
+                <div class="main-info">
+                    <div class="main-line top"></div>
+                    <div class="main-line"></div>
+                    <div class="main-line"></div>
+                    <div class="main-line"></div>
+                    <div class="main-line"></div>
+                    <div class="main-dot"></div>
+                    <div class="main-buttons">
+                        <div class="btn"></div>
+                        <div class="btn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部四宫格（放你的gaza.jpg和summer.jpg） -->
+        <div class="bottom-grid">
+            <div class="grid-card" onclick="goToDetail('song7')">
+                <img src="./picture/gaza.jpg" alt="歌曲7">
+                <div class="grid-dot"></div>
+            </div>
+            <div class="grid-card" onclick="goToDetail('song8')">
+                <img src="./picture/summer.jpg" alt="歌曲8">
+                <div class="grid-dot"></div>
+            </div>
+            <div class="grid-card" onclick="goToDetail('song9')">
+                <img src="https://picsum.photos/200/200?random=9" alt="歌曲9">
+                <div class="grid-dot"></div>
+            </div>
+            <div class="grid-card" onclick="goToDetail('song10')">
+                <img src="https://picsum.photos/200/200?random=10" alt="歌曲10">
+                <div class="grid-dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

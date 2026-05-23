@@ -1,0 +1,464 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    background: #333;
+    color: #fff;
+    padding-top: 60px;
+    min-height: 100vh; /* 确保页面高度铺满 */
+}
+
+/* 导航栏 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #444;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+    z-index: 100;
+    flex-wrap: nowrap; /* 防止导航栏换行 */
+}
+
+.nav-item {
+    width: 80px;
+    height: 24px;
+    background: #666;
+    border-radius: 12px;
+    flex-shrink: 0; /* 防止导航项被压缩 */
+}
+
+.nav-avatar {
+    width: 30px;
+    height: 30px;
+    background: #888;
+    border-radius: 50%;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.nav-more {
+    width: 100px;
+    height: 24px;
+    background: #666;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+/* 主容器：优化网格布局 */
+.container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%; /* 适配窄屏 */
+}
+
+/* 左侧卡片 */
+.sidebar-top {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card {
+    background: #555;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    height: 160px;
+}
+
+.card-thumb {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* 提示可点击 */
+}
+
+.card-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* 优化图片显示 */
+    display: block;
+}
+
+.card-info {
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-line {
+    width: 80px;
+    height: 8px;
+    background: #777;
+    border-radius: 4px;
+}
+
+.card-dot {
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    margin-left: auto;
+}
+
+/* 左侧列表 */
+.sidebar-bottom {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    background: #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #333;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    height: 50px;
+}
+
+.list-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+    cursor: pointer; /* 提示可点击 */
+}
+
+.list-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+}
+
+.list-line {
+    width: 100%;
+    height: 6px;
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.list-dot {
+    width: 12px;
+    height: 12px;
+    background: #ccc;
+    border-radius: 50%;
+}
+
+/* 主内容区 */
+.main-content {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    background: #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    color: #333;
+    height: 260px;
+}
+
+.main-thumb {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* 提示可点击 */
+}
+
+.main-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.main-info {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.main-line {
+    width: 100%;
+    height: 12px;
+    background: #ccc;
+    border-radius: 6px;
+}
+
+.main-line.top {
+    width: 60%;
+}
+
+.main-dot {
+    width: 24px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 1rem 0;
+}
+
+.main-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    width: 100px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+}
+
+/* 底部四宫格 */
+.bottom-grid {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    height: 200px;
+}
+
+.grid-card {
+    background: #eee;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.grid-card img {
+    max-width: 100%;
+    max-height: 140px;
+    object-fit: cover;
+    display: block;
+    cursor: pointer; /* 提示可点击 */
+    flex-grow: 1; /* 占满剩余空间 */
+}
+
+.grid-dot {
+    width: 30px;
+    height: 30px;
+    background: #ccc;
+    border-radius: 50%;
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+}
+
+/* 详情页 */
+.detail-page {
+    background: #222;
+    color: #fff;
+    padding: 2rem;
+    min-height: 100vh; /* 铺满屏幕 */
+}
+
+.back-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem; /* 增大点击区域 */
+}
+
+.detail-container {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%; /* 适配移动端 */
+}
+
+.detail-cover {
+    width: 100%;
+    height: 300px;
+    background: #444;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-cover img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.song-info {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.player {
+    background: #333;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    width: 100%; /* 适配宽度 */
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #555;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #1db954;
+    border-radius: 3px;
+    transition: width 0.1s ease; /* 平滑进度条 */
+}
+
+.time-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 1rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem; /* 增大点击区域 */
+}
+
+.play-btn {
+    font-size: 2rem;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.volume-slider {
+    width: 100px;
+}
+
+.lyrics-container {
+    background: #333;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 100%; /* 适配宽度 */
+}
+
+.lyrics-box {
+    margin-top: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.lyric-line {
+    margin-bottom: 1rem;
+    color: #aaa;
+    transition: color 0.3s;
+    line-height: 1.5; /* 优化行高 */
+}
+
+.lyric-line.active {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+/* 移动端适配（优化断点） */
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto; /* 逐行排列 */
+    }
+    .sidebar-top,
+    .sidebar-bottom,
+    .main-content,
+    .bottom-grid {
+        grid-column: 1 / 2;
+        width: 100%;
+    }
+    .sidebar-top { grid-row: 1 / 2; }
+    .sidebar-bottom { grid-row: 2 / 3; }
+    .main-content { grid-row: 3 / 4; height: auto; min-height: 200px; }
+    .bottom-grid { 
+        grid-row: 4 / 5; 
+        grid-template-columns: repeat(2, 1fr); /* 移动端2列 */
+        height: auto;
+        min-height: 200px;
+    }
+    .main-content {
+        flex-direction: column; /* 移动端主内容区上下排列 */
+    }
+    .main-thumb, .main-info {
+        width: 100%;
+    }
+    .detail-cover {
+        height: 200px; /* 移动端缩小封面 */
+    }
+}
+
+/* 小屏手机适配 */
+@media (max-width: 480px) {
+    .navbar {
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+    .nav-item {
+        width: 60px; /* 缩小导航项 */
+    }
+    .bottom-grid {
+        grid-template-columns: 1fr; /* 超小屏1列 */
+    }
+    .detail-page {
+        padding: 1rem;
+    }
+}

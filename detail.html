@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌曲详情</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="detail-page">
+    <div class="detail-container">
+        <!-- 返回按钮 -->
+        <button class="back-btn" onclick="history.back()">← 返回</button>
+
+        <!-- 歌曲封面 -->
+        <div class="detail-cover">
+            <img id="song-cover" src="" alt="歌曲封面">
+        </div>
+
+        <!-- 歌曲信息 -->
+        <div class="song-info">
+            <h2 id="song-title">歌曲标题</h2>
+            <p id="song-artist">歌手名</p>
+        </div>
+
+        <!-- 播放器UI（已预留） -->
+        <div class="player">
+            <!-- 进度条 -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="time-info">
+                <span id="current-time">00:00</span>
+                <span id="total-time">00:00</span>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="controls">
+                <button class="control-btn prev-btn">⏮</button>
+                <button class="control-btn play-btn" id="play-btn">▶</button>
+                <button class="control-btn next-btn">⏭</button>
+            </div>
+
+            <!-- 音量控制 -->
+            <div class="volume-control">
+                <span>🔊</span>
+                <input type="range" class="volume-slider" min="0" max="100" value="80">
+            </div>
+
+            <!-- 音频标签（预留，后续放真实MP3链接） -->
+            <audio id="audio-player" src="">
+        </div>
+
+        <!-- 歌词区域（已预留） -->
+        <div class="lyrics-container">
+            <h3>歌词</h3>
+            <div class="lyrics-box" id="lyrics-box">
+                <!-- 歌词后续用JS动态插入 -->
+                <p class="lyric-line">歌词行 1</p>
+                <p class="lyric-line">歌词行 2</p>
+                <p class="lyric-line">歌词行 3</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
