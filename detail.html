@@ -3,65 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>歌曲详情</title>
+    <title>歌曲播放</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="detail-page">
-    <div class="detail-container">
-        <!-- 返回按钮 -->
-        <button class="back-btn" onclick="history.back()">← 返回</button>
+<body class="player-page">
+    <div class="back-bar">
+        <button class="back-btn" id="backBtn">← 返回</button>
+    </div>
 
-        <!-- 歌曲封面 -->
-        <div class="detail-cover">
-            <img id="song-cover" src="" alt="歌曲封面">
+    <div class="detail-wrap">
+        <div class="detail-left">
+            <div class="player-cover">
+                <img id="song-cover" src="">
+            </div>
+            <div class="player-controls">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <div class="control-row">
+                    <span id="cur">00:00</span>
+                    <button id="playBtn" class="play-toggle">▶</button>
+                    <span id="dur">00:00</span>
+                </div>
+            </div>
         </div>
 
-        <!-- 歌曲信息 -->
-        <div class="song-info">
-            <h2 id="song-title">歌曲标题</h2>
-            <p id="song-artist">歌手名</p>
-        </div>
-
-        <!-- 播放器UI（已预留） -->
-        <div class="player">
-            <!-- 进度条 -->
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="time-info">
-                <span id="current-time">00:00</span>
-                <span id="total-time">00:00</span>
+        <div class="detail-right">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTabDetail('lyrics')">歌词</button>
+                <button class="tab-btn" onclick="switchTabDetail('info')">歌曲信息</button>
+                <button class="tab-btn" onclick="switchTabDetail('note')">创作手记</button>
             </div>
 
-            <!-- 控制按钮 -->
-            <div class="controls">
-                <button class="control-btn prev-btn">⏮</button>
-                <button class="control-btn play-btn" id="play-btn">▶</button>
-                <button class="control-btn next-btn">⏭</button>
+            <div id="tab-lyrics" class="tab-content active">
+                <div class="lyrics-box" id="lyrics-content"></div>
             </div>
-
-            <!-- 音量控制 -->
-            <div class="volume-control">
-                <span>🔊</span>
-                <input type="range" class="volume-slider" min="0" max="100" value="80">
+            <div id="tab-info" class="tab-content">
+                <div class="info-box">
+                    <p><strong>歌曲名称：</strong><span id="song-title"></span></p>
+                    <p><strong>歌手：</strong>唐璜DonJuan</p>
+                    <p><strong>时长：</strong><span id="song-duration"></span></p>
+                    <p><strong>信息：</strong><span id="song-info"></span></p>
+                </div>
             </div>
-
-            <!-- 音频标签（预留，后续放真实MP3链接） -->
-            <audio id="audio-player" src="">
-        </div>
-
-        <!-- 歌词区域（已预留） -->
-        <div class="lyrics-container">
-            <h3>歌词</h3>
-            <div class="lyrics-box" id="lyrics-box">
-                <!-- 歌词后续用JS动态插入 -->
-                <p class="lyric-line">歌词行 1</p>
-                <p class="lyric-line">歌词行 2</p>
-                <p class="lyric-line">歌词行 3</p>
+            <div id="tab-note" class="tab-content">
+                <div class="note-box" id="song-note"></div>
             </div>
         </div>
     </div>
 
+    <audio id="audio">
     <script src="script.js"></script>
+    <script>
+        const url = new URLSearchParams(location.search);
+        const songId = url.get('song');
+        const from = url.get('from');
+        const albumId = url.get('album');
+        const song = songs[songId];
+
+        document.getElementById('song-cover').src = song?.cover || 'picture/zhanweifu.png';
+        document.getElementById('song-duration').innerText = song?.duration || '00:00';
+
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const progress = document.getElementById('progress');
+        const cur = document.getElementById('cur');
+        const dur = document.getElementById('dur');
+
+        if (song?.audio) audio.src = song.audio;
+        audio.onloadedmetadata = () => dur.innerText = fmt(audio.duration);
+        audio.ontimeupdate = () => {
+            cur.innerText = fmt(audio.currentTime);
+            progress.style.width = (audio.currentTime/audio.duration)*100 + '%';
+        };
+
+        playBtn.onclick = () => {
+            if (audio.paused) { audio.play(); playBtn.innerText = '⏸'; }
+            else { audio.pause(); playBtn.innerText = '▶'; }
+        };
+
+        function fmt(t) {
+            const m = String(Math.floor(t/60)).padStart(2,'0');
+            const s = String(Math.floor(t%60)).padStart(2,'0');
+            return m + ':';
+        }
+
+        document.getElementById('backBtn').onclick = () => {
+            if (from === 'playlist') location.href = 'index.html#playlist';
+            else if (from === 'album' && albumId) location.href = `index.html#album-detail=${albumId}`;
+            else location.href = 'index.html';
+        };
+
+        function switchTabDetail(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-'+t).classList.add('active');
+            document.querySelectorAll('.tab-btn')[['lyrics','info','note'].indexOf(t)].classList.add('active');
+        }
+    </script>
 </body>
 </html>

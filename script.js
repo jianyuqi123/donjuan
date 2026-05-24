@@ -1,163 +1,382 @@
-// 完整的歌曲数据（补充所有10首歌曲）
+// ========= 原有歌曲/专辑数据 =========
 const songs = {
-    song1: {
-        title: "歌曲1",
-        artist: "歌手A",
-        cover: "https://picsum.photos/400/400?random=1",
-        audio: "", // 替换为真实MP3链接
-        lyrics: ["这是第一句歌词", "这是第二句歌词", "这是第三句歌词"]
-    },
-    song2: {
-        title: "歌曲2",
-        artist: "歌手B",
-        cover: "https://picsum.photos/400/400?random=2",
-        audio: "",
-        lyrics: ["歌词行1", "歌词行2", "歌词行3"]
-    },
-    song3: {
-        title: "歌曲3",
-        artist: "歌手C",
-        cover: "https://picsum.photos/80/80?random=3",
-        audio: "",
-        lyrics: ["歌曲3-歌词1", "歌曲3-歌词2", "歌曲3-歌词3"]
-    },
-    song4: {
-        title: "歌曲4",
-        artist: "歌手D",
-        cover: "https://picsum.photos/80/80?random=4",
-        audio: "",
-        lyrics: ["歌曲4-歌词1", "歌曲4-歌词2", "歌曲4-歌词3"]
-    },
-    song5: {
-        title: "歌曲5",
-        artist: "歌手E",
-        cover: "https://picsum.photos/80/80?random=5",
-        audio: "",
-        lyrics: ["歌曲5-歌词1", "歌曲5-歌词2", "歌曲5-歌词3"]
-    },
-    song6: {
-        title: "歌曲6",
-        artist: "歌手F",
-        cover: "./picture/letter.png",
-        audio: "",
-        lyrics: ["歌曲6-歌词1", "歌曲6-歌词2", "歌曲6-歌词3"]
-    },
-    song7: {
-        title: "歌曲7",
-        artist: "歌手G",
-        cover: "./picture/gaza.jpg",
-        audio: "",
-        lyrics: ["歌曲7-歌词1", "歌曲7-歌词2", "歌曲7-歌词3"]
-    },
-    song8: {
-        title: "歌曲8",
-        artist: "歌手H",
-        cover: "./picture/summer.jpg",
-        audio: "",
-        lyrics: ["歌曲8-歌词1", "歌曲8-歌词2", "歌曲8-歌词3"]
-    },
-    song9: {
-        title: "歌曲9",
-        artist: "歌手I",
-        cover: "https://picsum.photos/200/200?random=9",
-        audio: "",
-        lyrics: ["歌曲9-歌词1", "歌曲9-歌词2", "歌曲9-歌词3"]
-    },
-    song10: {
-        title: "歌曲10",
-        artist: "歌手J",
-        cover: "https://picsum.photos/200/200?random=10",
-        audio: "",
-        lyrics: ["歌曲10-歌词1", "歌曲10-歌词2", "歌曲10-歌词3"]
-    }
+  gaza: {
+      title: "Gaza",
+      artist: "唐璜 DonJuan",
+      cover: "picture/gaza.jpg",
+      audio: "music/summer.mp3",
+      lyrics: ["风掠过荒原 带走最后余温","沉默的城 刻满无声伤痕"],
+      duration: "03:48",
+      age: "2025",
+      note: "氛围感叙事",
+      code: "DxV-01",
+      album: "album1"
+  },
+  letter: {
+      title: "一封信",
+      artist: "唐璜 DonJuan",
+      cover: "picture/letter.png",   // 已修改
+      audio: "music/summer.mp3",
+      lyrics: ["笔尖落下 写满未说的话","纸页泛黄 藏着旧时光"],
+      duration: "04:12",
+      age: "2025",
+      note: "极简钢琴",
+      code: "DxV-02",
+      album: "album2"
+  },
+  summer: {
+      title: "夏日",
+      artist: "唐璜 DonJuan",
+      cover: "picture/summer.jpg",   // 已修改
+      audio: "music/summer.mp3",
+      lyrics: ["蝉鸣叫醒 闷热的午后","汽水冒泡 心动的节奏"],
+      duration: "03:25",
+      age: "2024",
+      note: "青春回忆",
+      code: "DxV-03",
+      album: "album3"
+  }
 };
 
-// 首页跳转逻辑（核心：确保URL参数正确传递）
-function goToDetail(songId) {
-    // 验证songId存在，避免无效跳转
-    if (songs[songId]) {
-        window.location.href = `detail.html?song=${songId}`;
-    } else {
-        alert("该歌曲信息不存在！");
-    }
+const albums = {
+  album1: { title: "氛围感叙事", cover: "picture/gaza.jpg", date: "2025-06-15", style: "独立流行", tracks: ["gaza"] },
+  album2: { title: "极简叙事EP", cover: "donjuan/picture/letter.png", date: "2025-03-20", style: "极简民谣", tracks: ["letter"] },
+  album3: { title: "夏日限定", cover: "donjuan/picture/summer.jpg", date: "2024-07-15", style: "青春流行", tracks: ["summer"] }
+};
+
+let currentOpenAlbum = null;
+
+// ========= 内嵌 playlist 数据 =========
+const playlist = [
+  { "id": 1, "cover": "占位符", "title": "孤季", "duration": "1:00", "year": "2014.1", "age": 15, "note": "" },
+  { "id": 2, "cover": "占位符", "title": "鲁", "duration": "1:00", "year": "2014.2", "age": 15, "note": "" },
+  { "id": 3, "cover": "占位符", "title": "听说", "duration": "1:00", "year": "2014.4", "age": 15, "note": "" },
+  { "id": 4, "cover": "占位符", "title": "那些美好", "duration": "1:00", "year": "2014.5", "age": 15, "note": "" },
+  { "id": 5, "cover": "占位符", "title": "告白与告别", "duration": "1:00", "year": "2014.11", "age": 16, "note": "" },
+  { "id": 6, "cover": "占位符", "title": "我愿陪你颠沛流离", "duration": "1:00", "year": "2014.12", "age": 16, "note": "" },
+  { "id": 7, "cover": "占位符", "title": "圣诞孤单", "duration": "1:00", "year": "2014.12", "age": 16, "note": "" },
+  { "id": 8, "cover": "占位符", "title": "再抄写一遍", "duration": "1:00", "year": "2014.12", "age": 16, "note": "" },
+  { "id": 9, "cover": "占位符", "title": "遥远和船", "duration": "1:00", "year": "2015.12", "age": 17, "note": "" },
+  { "id": 10, "cover": "占位符", "title": "相似红豆", "duration": "1:00", "year": "2016.12", "age": 18, "note": "" },
+  { "id": 11, "cover": "占位符", "title": "天亮", "duration": "1:00", "year": "2017.12", "age": 19, "note": "" },
+  { "id": 12, "cover": "占位符", "title": "远风岛", "duration": "1:00", "year": "2018.12", "age": 20, "note": "" },
+  { "id": 13, "cover": "占位符", "title": "世界尽头的歌声", "duration": "1:00", "year": "2019.12", "age": 21, "note": "" },
+  { "id": 14, "cover": "占位符", "title": "一起回家", "duration": "1:00", "year": "2020.12", "age": 22, "note": "" },
+  { "id": 15, "cover": "占位符", "title": "怀旧先生", "duration": "1:00", "year": "2021.12", "age": 23, "note": "" },
+  { "id": 16, "cover": "占位符", "title": "雨季不再来", "duration": "1:00", "year": "2022.12", "age": 24, "note": "" },
+  { "id": 17, "cover": "占位符", "title": "此间的少年", "duration": "1:00", "year": "2023.12", "age": 25, "note": "" },
+  { "id": 18, "cover": "占位符", "title": "你还好吗", "duration": "1:00", "year": "2024.12", "age": 26, "note": "" },
+  { "id": 19, "cover": "占位符", "title": "千只鹤", "duration": "1:00", "year": "2025.12", "age": 27, "note": "" },
+  { "id": 20, "cover": "占位符", "title": "树与花", "duration": "1:00", "year": "2026.12", "age": 28, "note": "" },
+  { "id": 21, "cover": "占位符", "title": "时间游戏", "duration": "1:00", "year": "2027.12", "age": 29, "note": "" },
+  { "id": 22, "cover": "占位符", "title": "百年孤独", "duration": "1:00", "year": "2028.12", "age": 30, "note": "" },
+  { "id": 23, "cover": "占位符", "title": "折纸灯", "duration": "1:00", "year": "2029.12", "age": 31, "note": "" },
+  { "id": 24, "cover": "占位符", "title": "乌龟", "duration": "1:00", "year": "2030.12", "age": 32, "note": "" },
+  { "id": 25, "cover": "占位符", "title": "盛夏夜", "duration": "1:00", "year": "2031.12", "age": 33, "note": "" },
+  { "id": 26, "cover": "占位符", "title": "一叶不知秋", "duration": "1:00", "year": "2032.12", "age": 34, "note": "" },
+  { "id": 27, "cover": "占位符", "title": "南方以南，北方以北", "duration": "1:00", "year": "2033.12", "age": 35, "note": "" },
+  { "id": 28, "cover": "占位符", "title": "风景过后", "duration": "1:00", "year": "2034.12", "age": 36, "note": "" },
+  { "id": 29, "cover": "占位符", "title": "红色小闹钟", "duration": "1:00", "year": "2035.12", "age": 37, "note": "" },
+  { "id": 30, "cover": "占位符", "title": "小巨人", "duration": "1:00", "year": "2036.12", "age": 38, "note": "" },
+  { "id": 31, "cover": "占位符", "title": "你", "duration": "1:00", "year": "2037.12", "age": 39, "note": "" },
+  { "id": 32, "cover": "占位符", "title": "报答", "duration": "1:00", "year": "2038.12", "age": 40, "note": "" },
+  { "id": 33, "cover": "占位符", "title": "五月", "duration": "1:00", "year": "2039.12", "age": 41, "note": "" },
+  { "id": 34, "cover": "占位符", "title": "你是我的夏天", "duration": "1:00", "year": "2040.12", "age": 42, "note": "" },
+  { "id": 35, "cover": "占位符", "title": "礼县", "duration": "1:00", "year": "2041.12", "age": 43, "note": "" },
+  { "id": 36, "cover": "占位符", "title": "我不能用粤语祝你生日快乐", "duration": "1:00", "year": "2042.12", "age": 44, "note": "" },
+  { "id": 37, "cover": "占位符", "title": "青春絮语", "duration": "1:00", "year": "2043.12", "age": 45, "note": "" },
+  { "id": 38, "cover": "占位符", "title": "石乐志", "duration": "1:00", "year": "2044.12", "age": 46, "note": "" },
+  { "id": 39, "cover": "占位符", "title": "宁波", "duration": "1:00", "year": "2045.12", "age": 47, "note": "" },
+  { "id": 40, "cover": "占位符", "title": "池年", "duration": "1:00", "year": "2046.12", "age": 48, "note": "" },
+  { "id": 41, "cover": "占位符", "title": "方十八", "duration": "1:00", "year": "2047.12", "age": 49, "note": "" },
+  { "id": 42, "cover": "占位符", "title": "请回答1999", "duration": "1:00", "year": "2048.12", "age": 50, "note": "" },
+  { "id": 43, "cover": "占位符", "title": "糖果", "duration": "1:00", "year": "2049.12", "age": 51, "note": "" },
+  { "id": 44, "cover": "占位符", "title": "我亦是行人", "duration": "1:00", "year": "2050.12", "age": 52, "note": "" },
+  { "id": 45, "cover": "占位符", "title": "第几个七夕", "duration": "1:00", "year": "2051.12", "age": 53, "note": "" },
+  { "id": 46, "cover": "占位符", "title": "夏日纪事", "duration": "1:00", "year": "2052.12", "age": 54, "note": "" },
+  { "id": 47, "cover": "占位符", "title": "我亦飘零久", "duration": "1:00", "year": "2053.12", "age": 55, "note": "" },
+  { "id": 48, "cover": "占位符", "title": "山城啤酒", "duration": "1:00", "year": "2054.12", "age": 56, "note": "" },
+  { "id": 49, "cover": "占位符", "title": "冷暖", "duration": "1:00", "year": "2055.12", "age": 57, "note": "" },
+  { "id": 50, "cover": "占位符", "title": "深夜食堂", "duration": "1:00", "year": "2056.12", "age": 58, "note": "" },
+  { "id": 51, "cover": "占位符", "title": "Hey", "duration": "1:00", "year": "2057.12", "age": 59, "note": "" },
+  { "id": 52, "cover": "占位符", "title": "当流星划过上海", "duration": "1:00", "year": "2058.12", "age": 60, "note": "" },
+  { "id": 53, "cover": "占位符", "title": "山雨欲来风满楼2019", "duration": "1:00", "year": "2059.12", "age": 61, "note": "" },
+  { "id": 54, "cover": "占位符", "title": "元灯夜", "duration": "1:00", "year": "2060.12", "age": 62, "note": "" },
+  { "id": 55, "cover": "占位符", "title": "野马浜之歌", "duration": "1:00", "year": "2061.12", "age": 63, "note": "" },
+  { "id": 56, "cover": "占位符", "title": "塞壬", "duration": "1:00", "year": "2062.12", "age": 64, "note": "" },
+  { "id": 57, "cover": "占位符", "title": "灰尘童话", "duration": "1:00", "year": "2063.12", "age": 65, "note": "" },
+  { "id": 58, "cover": "占位符", "title": "夏天再见", "duration": "1:00", "year": "2064.12", "age": 66, "note": "" },
+  { "id": 59, "cover": "占位符", "title": "混音魔王/人生无道理", "duration": "1:00", "year": "2065.12", "age": 67, "note": "" },
+  { "id": 60, "cover": "占位符", "title": "冬眠的海", "duration": "1:00", "year": "2066.12", "age": 68, "note": "" },
+  { "id": 61, "cover": "占位符", "title": "树与飞鸟", "duration": "1:00", "year": "2067.12", "age": 69, "note": "" },
+  { "id": 62, "cover": "占位符", "title": "白昼烟火", "duration": "1:00", "year": "2068.12", "age": 70, "note": "" },
+  { "id": 63, "cover": "占位符", "title": "宇宙尘埃", "duration": "1:00", "year": "2069.12", "age": 71, "note": "" },
+  { "id": 64, "cover": "占位符", "title": "你陪我多少年", "duration": "1:00", "year": "2070.12", "age": 72, "note": "" },
+  { "id": 65, "cover": "占位符", "title": "周游世界的精灵", "duration": "1:00", "year": "2071.12", "age": 73, "note": "" },
+  { "id": 66, "cover": "占位符", "title": "往事2021", "duration": "1:00", "year": "2072.12", "age": 74, "note": "" },
+  { "id": 67, "cover": "占位符", "title": "河雨", "duration": "1:00", "year": "2073.12", "age": 75, "note": "" },
+  { "id": 68, "cover": "占位符", "title": "月圆", "duration": "1:00", "year": "2074.12", "age": 76, "note": "" },
+  { "id": 69, "cover": "占位符", "title": "少年具象", "duration": "1:00", "year": "2075.12", "age": 77, "note": "" },
+  { "id": 70, "cover": "占位符", "title": "外青松7990", "duration": "1:00", "year": "2076.12", "age": 78, "note": "" },
+  { "id": 71, "cover": "占位符", "title": "酣欢", "duration": "1:00", "year": "2077.12", "age": 79, "note": "" },
+  { "id": 72, "cover": "占位符", "title": "橘子辉煌", "duration": "1:00", "year": "2078.12", "age": 80, "note": "" },
+  { "id": 73, "cover": "占位符", "title": "工厂大门", "duration": "1:00", "year": "2079.12", "age": 81, "note": "" },
+  { "id": 74, "cover": "信.png", "title": "一封陌生女人的来信", "duration": "1:00", "year": "2080.12", "age": 82, "note": "" },
+  { "id": 75, "cover": "占位符", "title": "双源记", "duration": "1:00", "year": "2081.12", "age": 83, "note": "" },
+  { "id": 76, "cover": "占位符", "title": "暴风雨", "duration": "1:00", "year": "2082.12", "age": 84, "note": "" },
+  { "id": 77, "cover": "占位符", "title": "海岸线", "duration": "1:00", "year": "2083.12", "age": 85, "note": "" },
+  { "id": 78, "cover": "占位符", "title": "一年又一年", "duration": "1:00", "year": "2084.12", "age": 86, "note": "" },
+  { "id": 79, "cover": "占位符", "title": "这片土地是你的土地", "duration": "1:00", "year": "2085.12", "age": 87, "note": "" },
+  { "id": 80, "cover": "占位符", "title": "天文日记", "duration": "1:00", "year": "2086.12", "age": 88, "note": "" },
+  { "id": 81, "cover": "占位符", "title": "飞向天空的单车", "duration": "1:00", "year": "2087.12", "age": 89, "note": "" },
+  { "id": 82, "cover": "占位符", "title": "我们最后的校园民谣", "duration": "1:00", "year": "2088.12", "age": 90, "note": "" },
+  { "id": 83, "cover": "占位符", "title": "伤心旅馆", "duration": "1:00", "year": "2089.12", "age": 91, "note": "" },
+  { "id": 84, "cover": "占位符", "title": "贝壳", "duration": "1:00", "year": "2090.12", "age": 92, "note": "" },
+  { "id": 85, "cover": "占位符", "title": "零", "duration": "1:00", "year": "2091.12", "age": 93, "note": "" },
+  { "id": 86, "cover": "占位符", "title": "有爱天注定", "duration": "1:00", "year": "2092.12", "age": 94, "note": "" },
+  { "id": 87, "cover": "占位符", "title": "我是一条船", "duration": "1:00", "year": "2093.12", "age": 95, "note": "" },
+  { "id": 88, "cover": "占位符", "title": "逃亡北京", "duration": "1:00", "year": "2094.12", "age": 96, "note": "" },
+  { "id": 89, "cover": "占位符", "title": "如期归来……", "duration": "1:00", "year": "2095.12", "age": 97, "note": "" },
+  { "id": 90, "cover": "占位符", "title": "元气少女", "duration": "1:00", "year": "2096.12", "age": 98, "note": "" },
+  { "id": 91, "cover": "占位符", "title": "消失在风里的女孩", "duration": "1:00", "year": "2097.12", "age": 99, "note": "" },
+  { "id": 92, "cover": "占位符", "title": "维尼男孩", "duration": "1:00", "year": "2098.12", "age": 100, "note": "" },
+  { "id": 93, "cover": "占位符", "title": "一梦画黄粱", "duration": "1:00", "year": "2099.12", "age": 101, "note": "" },
+  { "id": 94, "cover": "占位符", "title": "幸运星", "duration": "1:00", "year": "2100.12", "age": 102, "note": "" },
+  { "id": 95, "cover": "占位符", "title": "桨声灯影里的苏州河", "duration": "1:00", "year": "2101.12", "age": 103, "note": "" },
+  { "id": 96, "cover": "占位符", "title": "夜色正好", "duration": "1:00", "year": "2102.12", "age": 104, "note": "" },
+  { "id": 97, "cover": "占位符", "title": "成年旧事", "duration": "1:00", "year": "2103.12", "age": 105, "note": "" },
+  { "id": 98, "cover": "占位符", "title": "无疾而终的夏", "duration": "1:00", "year": "2104.12", "age": 106, "note": "" },
+  { "id": 99, "cover": "占位符", "title": "春天的一场雪", "duration": "1:00", "year": "2105.12", "age": 107, "note": "" },
+  { "id": 100, "cover": "占位符", "title": "江上往来人", "duration": "1:00", "year": "2106.12", "age": 108, "note": "" },
+  { "id": 101, "cover": "占位符", "title": "最后一个与你互相取暖的夜晚", "duration": "1:00", "year": "2107.12", "age": 109, "note": "" },
+  { "id": 102, "cover": "占位符", "title": "海上有仙山", "duration": "1:00", "year": "2108.12", "age": 110, "note": "" },
+  { "id": 103, "cover": "gaza.jpg", "title": "出加沙记", "duration": "1:00", "year": "2109.12", "age": 111, "note": "" },
+  { "id": 104, "cover": "占位符", "title": "春", "duration": "1:00", "year": "2110.12", "age": 112, "note": "" },
+  { "id": 105, "cover": "占位符", "title": "名为童年的遥远记忆", "duration": "1:00", "year": "2111.12", "age": 113, "note": "" },
+  { "id": 106, "cover": "占位符", "title": "断桨", "duration": "1:00", "year": "2112.12", "age": 114, "note": "" },
+  { "id": 107, "cover": "占位符", "title": "昆园曲", "duration": "1:00", "year": "2113.12", "age": 115, "note": "" },
+  { "id": 108, "cover": "占位符", "title": "盛世危言", "duration": "1:00", "year": "2114.12", "age": 116, "note": "" },
+  { "id": 109, "cover": "占位符", "title": "龙与少年游", "duration": "1:00", "year": "2115.12", "age": 117, "note": "" },
+  { "id": 110, "cover": "绿日长夏.jpg", "title": "夏日地铁", "duration": "1:00", "year": "2116.12", "age": 118, "note": "" },
+  { "id": 111, "cover": "绿日长夏.jpg", "title": "无尽夏", "duration": "1:00", "year": "2117.12", "age": 119, "note": "" },
+  { "id": 112, "cover": "绿日长夏.jpg", "title": "一万个夏天", "duration": "1:00", "year": "2118.12", "age": 120, "note": "" },
+  { "id": 113, "cover": "占位符", "title": "一百年前的风", "duration": "1:00", "year": "2119.12", "age": 121, "note": "" },
+  { "id": 114, "cover": "占位符", "title": "廉价商店", "duration": "1:00", "year": "2120.12", "age": 122, "note": "" },
+  { "id": 115, "cover": "占位符", "title": "骑手典礼", "duration": "1:00", "year": "2121.12", "age": 123, "note": "" },
+  { "id": 116, "cover": "占位符", "title": "火柴塑像", "duration": "1:00", "year": "2122.12", "age": 124, "note": "" },
+  { "id": 117, "cover": "占位符", "title": "小小说", "duration": "1:00", "year": "2123.12", "age": 125, "note": "" },
+  { "id": 118, "cover": "占位符", "title": "云是一张毯", "duration": "1:00", "year": "2124.12", "age": 126, "note": "" },
+  { "id": 119, "cover": "占位符", "title": "今夜我和你", "duration": "1:00", "year": "2125.12", "age": 127, "note": "" },
+  { "id": 120, "cover": "占位符", "title": "爱与伤痕", "duration": "1:00", "year": "2126.12", "age": 128, "note": "" },
+  { "id": 121, "cover": "占位符", "title": "没有什么能够阻挡我们的重逢", "duration": "1:00", "year": "2127.12", "age": 129, "note": "" },
+  { "id": 122, "cover": "占位符", "title": "旧伤复发", "duration": "1:00", "year": "2128.12", "age": 130, "note": "" },
+  { "id": 123, "cover": "占位符", "title": "渔夫和魔鬼", "duration": "1:00", "year": "2129.12", "age": 131, "note": "" },
+  { "id": 124, "cover": "占位符", "title": "世界是一首我爱你的歌", "duration": "1:00", "year": "2130.12", "age": 132, "note": "" },
+  { "id": 125, "cover": "占位符", "title": "八月的傍晚", "duration": "1:00", "year": "2131.12", "age": 133, "note": "" },
+  { "id": 126, "cover": "占位符", "title": "思南路82号", "duration": "1:00", "year": "2132.12", "age": 134, "note": "" },
+  { "id": 127, "cover": "占位符", "title": "月河", "duration": "1:00", "year": "2133.12", "age": 135, "note": "" },
+  { "id": 128, "cover": "占位符", "title": "徕卡不值得", "duration": "1:00", "year": "2134.12", "age": 136, "note": "" },
+  { "id": 129, "cover": "占位符", "title": "新世界", "duration": "1:00", "year": "2135.12", "age": 137, "note": "" },
+  { "id": 130, "cover": "占位符", "title": "安娜堡", "duration": "1:00", "year": "2136.12", "age": 138, "note": "" },
+  { "id": 131, "cover": "占位符", "title": "走", "duration": "1:00", "year": "2137.12", "age": 139, "note": "" },
+  { "id": 132, "cover": "占位符", "title": "奔竞", "duration": "1:00", "year": "2138.12", "age": 140, "note": "" },
+  { "id": 133, "cover": "占位符", "title": "咆哮的二零年代", "duration": "1:00", "year": "2139.12", "age": 141, "note": "" },
+  { "id": 134, "cover": "占位符", "title": "上海青", "duration": "1:00", "year": "2140.12", "age": 142, "note": "" },
+  { "id": 135, "cover": "占位符", "title": "太平洋，再会", "duration": "1:00", "year": "2141.12", "age": 143, "note": "" },
+  { "id": 136, "cover": "占位符", "title": "滚石不生苔", "duration": "1:00", "year": "2142.12", "age": 144, "note": "" },
+  { "id": 137, "cover": "占位符", "title": "纳米布沙漠", "duration": "1:00", "year": "2143.12", "age": 145, "note": "" },
+  { "id": 138, "cover": "占位符", "title": "致佘山", "duration": "1:00", "year": "2144.12", "age": 146, "note": "" },
+  { "id": 139, "cover": "占位符", "title": "公正的吉里", "duration": "1:00", "year": "2145.12", "age": 147, "note": "" },
+  { "id": 140, "cover": "占位符", "title": "自然历史", "duration": "1:00", "year": "2146.12", "age": 148, "note": "" },
+  { "id": 141, "cover": "占位符", "title": "1970", "duration": "1:00", "year": "2147.12", "age": 149, "note": "" },
+  { "id": 142, "cover": "占位符", "title": "维纳斯的试炼", "duration": "1:00", "year": "2148.12", "age": 150, "note": "" },
+  { "id": 143, "cover": "占位符", "title": "Zoey", "duration": "1:00", "year": "2149.12", "age": 151, "note": "" }
+];
+
+// ========= 内嵌歌词数据 =========
+const lyricsData = [
+  {
+      "title": "孤季",
+      "lyrics": "阳光在蓝天里和什么相爱\n蓝天在为谁隐藏什么阴霾\n好多秘密 等你去猜\n你却懒懒躺在冬末不起来\n岁月把回忆揉成什么等待\n想你把孤独埋在深深脑海\n我发着呆 等你回来\n看你身影零落在季节之外\n你的伤害 我久久不能释怀\n你的离开 我想想也能明白\n是你无挂无碍 我再多爱也难说回来\n你的伤害 我慢慢也能释怀\n你的离开 我越想越不明白\n若是你我都在 我何必勉强自己离开\n我们在海边对浪花说相爱\n如今我一人对浪花说等待\n冬去春来 我爱不改\n我决意将你笑容刻进脑海\n是在那片孤独之外\n你说在乎不在 爱已不在\n其实在乎还在 我也还在",
+      "info": "",
+      "note": ""
+  },
+  {
+      "title": "鲁",
+      "lyrics": "细雨卷落的那闹市满目疮痍\n老家的酒馆剩牌匾还在那里\n除夕清明 端午中秋\n儿时为一口米糕呼朋唤友\n泛黄的楹联斑驳了多少年头\n老院的阁楼爬山虎枯在窗口\n小路尽头 我在等候\n巷弄里的叫卖声还有没有\n回忆如一场忐忑不安的守候\n以为弄丢的梦其实从未拥有\n童年熬成糖甜与苦此消彼长\n故事总是还未开始就已淡忘\n默默勾勒着故乡该有的模样\n绝不是凄凉的街道空荡的弄堂\n我记得曾有过美好的旧时光\n不知道我有没有忘\n默默勾勒着记忆留存的影像\n像黑白默片在我脑海兀自回放\n直到眼前的景色否认了过往\n我的脸上泛着夕阳",
+      "info": "",
+      "note": ""
+  }
+];
+
+// 辅助函数：通过歌曲标题查找歌词数据
+function findLyricsByTitle(title) {
+  return lyricsData.find(item => item.title === title);
 }
 
-// 详情页逻辑（DOM加载完成后执行）
-document.addEventListener('DOMContentLoaded', () => {
-    // 仅在详情页执行逻辑
-    if (window.location.pathname.includes('detail.html')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const songId = urlParams.get('song');
-        
-        // 验证歌曲ID有效性
-        if (!songId || !songs[songId]) {
-            alert("无效的歌曲链接！");
-            window.location.href = 'index.html'; // 跳回首页
-            return;
-        }
+// 根据 cover 字段返回真实图片路径
+function getCoverPath(cover) {
+  if (cover === '占位符') return 'picture/zhanweifu.png';
+  if (cover === '信.png') return 'picture/letter.png';
+  if (cover === '绿日长夏.jpg') return 'picture/summer.jpg';
+  // 其他情况（如 gaza.jpg）保持原目录
+  return `picture/${cover}`;
+}
 
-        const song = songs[songId];
+// ========= 页面初始化 =========
+window.onload = function () {
+  const isIndexPage = !location.pathname.includes('detail.html');
+  if (isIndexPage) {
+      renderPlaylist();
+  }
+  initPage();
+};
 
-        // 填充歌曲信息
-        document.getElementById('song-cover').src = song.cover;
-        document.getElementById('song-title').textContent = song.title;
-        document.getElementById('song-artist').textContent = song.artist;
-        document.getElementById('audio-player').src = song.audio;
+// 渲染曲序
+function renderPlaylist() {
+  const body = document.getElementById('playlist-body');
+  if (!body) return;
+  body.innerHTML = '';
 
-        // 填充歌词
-        const lyricsBox = document.getElementById('lyrics-box');
-        lyricsBox.innerHTML = "";
-        song.lyrics.forEach(line => {
-            const p = document.createElement('p');
-            p.className = 'lyric-line';
-            p.textContent = line;
-            lyricsBox.appendChild(p);
-        });
+  if (!playlist.length) {
+      body.innerHTML = `<div class="table-row" style="grid-column:1/-1; text-align:center; color:#ccc;">暂无曲序数据</div>`;
+      return;
+  }
 
-        // 播放器控制逻辑
-        const audio = document.getElementById('audio-player');
-        const playBtn = document.getElementById('play-btn');
-        const progressFill = document.getElementById('progress-fill');
-        const currentTimeEl = document.getElementById('current-time');
-        const totalTimeEl = document.getElementById('total-time');
-        const volumeSlider = document.querySelector('.volume-slider');
+  playlist.forEach(song => {
+      const row = document.createElement('div');
+      row.className = 'table-row';
+      row.onclick = () => openSongDetail(song.title);
 
-        // 播放/暂停
-        playBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                playBtn.textContent = "⏸";
-            } else {
-                audio.pause();
-                playBtn.textContent = "▶";
-            }
-        });
+      const coverSrc = getCoverPath(song.cover);
 
-        // 更新进度条
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-                const percent = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = `${percent}%`;
-                currentTimeEl.textContent = formatTime(audio.currentTime);
-            }
-        });
+      row.innerHTML = `
+          <div class="col-num">${song.id}</div>
+          <div class="col-cover"><img src="${coverSrc}" onerror="this.src='donjuan/picture/zhanweifu.png'"></div>
+          <div class="col-title">${escapeHtml(song.title)}</div>
+          <div class="col-time">${song.duration}</div>
+          <div class="col-age">${song.year}</div>
+          <div class="col-note">${escapeHtml(song.note) || '无'}</div>
+          <div class="col-play">▶</div>
+      `;
+      body.appendChild(row);
+  });
+}
 
-        // 加载完成显示总时长
-        audio.addEventListener('loadedmetadata', () => {
-            totalTimeEl.textContent = formatTime(audio.duration);
-        });
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+  });
+}
 
-        // 音量控制
-        volumeSlider.addEventListener('input', () => {
-            audio.volume = volumeSlider.value / 100;
-        });
+function openSongDetail(title) {
+  const songLyrics = findLyricsByTitle(title);
+  if (!songLyrics) {
+      alert('暂无歌词数据，可稍后补充。');
+      return;
+  }
+  sessionStorage.setItem('currentSong', JSON.stringify(songLyrics));
+  location.href = 'detail.html?title=' + encodeURIComponent(title);
+}
 
-        // 时间格式化工具函数
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "00:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        }
-    }
+function loadLyricPage() {
+  const urlParams = new URLSearchParams(location.search);
+  const title = urlParams.get('title');
+  if (!title) return;
+
+  let songData = findLyricsByTitle(title);
+  if (!songData) {
+      songData = { title: title, lyrics: '暂无歌词', info: '暂无信息', note: '暂无创作手记' };
+  }
+  document.getElementById('song-title').innerText = songData.title;
+  document.getElementById('lyrics-content').innerText = songData.lyrics || '暂无歌词';
+  document.getElementById('song-info').innerText = songData.info || '无';
+  document.getElementById('song-note').innerText = songData.note || '无';
+}
+
+// ========= 原有功能（专辑、搜索、切换等） =========
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (tab === 'album-detail') {
+      document.getElementById('page-album-detail').classList.add('active');
+  } else {
+      document.getElementById('page-' + tab).classList.add('active');
+      const i = ['home','playlist','album','literature'].indexOf(tab);
+      if (i >= 0) document.querySelectorAll('.nav-item')[i].classList.add('active');
+  }
+}
+
+function openAlbum(albumId) {
+  currentOpenAlbum = albumId;
+  const al = albums[albumId];
+  if (!al) return;
+  document.getElementById('detail-album-cover').src = al.cover;
+  document.getElementById('detail-album-title').innerText = al.title;
+  document.getElementById('detail-album-date').innerText = "发行时间：" + al.date;
+  document.getElementById('detail-album-style').innerText = "风格：" + al.style;
+
+  const list = document.getElementById('tracklist-body');
+  list.innerHTML = '';
+  al.tracks.forEach((sid, i) => {
+      const s = songs[sid];
+      if (!s) return;
+      const d = document.createElement('div');
+      d.className = 'table-row';
+      d.onclick = () => goToDetail(sid, 'album', albumId);
+      d.innerHTML = `
+          <div class="col-num">${i+1}</div>
+          <div class="col-code">${s.code || ''}</div>
+          <div class="col-title">${s.title}</div>
+          <div class="col-time">${s.duration}</div>
+          <div class="col-play">▶</div>
+      `;
+      list.appendChild(d);
+  });
+  switchTab('album-detail');
+  location.hash = `album-detail=${albumId}`;
+}
+
+function goToDetail(songId, from, albumId = "") {
+  let u = `detail.html?song=${songId}&from=${from}`;
+  if (albumId) u += `&album=${albumId}`;
+  location.href = u;
+}
+
+function searchSong() {
+  const kw = document.getElementById('search-input').value.toLowerCase().trim();
+  const box = document.getElementById('search-result');
+  box.innerHTML = ''; box.style.display = 'none';
+  if (!kw) return;
+  const arr = Object.entries(songs).filter(([_,s]) => s.title.toLowerCase().includes(kw));
+  if (arr.length === 0) { box.innerHTML = '<div class="search-result-item">无匹配歌曲</div>'; box.style.display = 'block'; return; }
+  arr.forEach(([id,s]) => {
+      const it = document.createElement('div');
+      it.className = 'search-result-item';
+      it.onclick = () => goToDetail(id, 'home');
+      it.innerHTML = `<img src="${s.cover}" onerror="this.src='donjuan/picture/zhanweifu.png'"><span>${s.title}</span>`;
+      box.appendChild(it);
+  });
+  box.style.display = 'block';
+}
+
+function initPage() {
+  if (location.pathname.includes('detail.html')) {
+      loadLyricPage();
+  } else {
+      const h = location.hash;
+      if (h.includes('playlist')) switchTab('playlist');
+      else if (h.includes('album-detail')) {
+          const aid = h.replace('#album-detail=', '');
+          if (albums[aid]) openAlbum(aid);
+      }
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-box')) document.getElementById('search-result').style.display = 'none';
 });

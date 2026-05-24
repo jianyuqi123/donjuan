@@ -3,113 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音乐作品集</title>
+    <title>唐璜 DonJuan</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <nav class="navbar">
-        <div class="nav-item"></div>
-        <div class="nav-item"></div>
-        <div class="nav-item"></div>
-        <div class="nav-item"></div>
-        <div class="nav-item"></div>
-        <div class="nav-avatar"></div>
-        <div class="nav-more"></div>
-    </nav>
+    <header class="top-header">
+        <nav class="top-nav">
+            <div class="nav-item active" onclick="switchTab('home')">首页</div>
+            <div class="nav-item" onclick="switchTab('playlist')">曲序</div>
+            <div class="nav-item" onclick="switchTab('album')">专辑/EP</div>
+            <div class="nav-item" onclick="switchTab('literature')">文学作品</div>
+        </nav>
+        <div class="search-box">
+            <input type="text" placeholder="搜索歌曲..." class="search-input" id="search-input" oninput="searchSong()">
+            <div class="search-result" id="search-result"></div>
+        </div>
+    </header>
 
-    <div class="container">
-        <!-- 左侧上：双卡片列表 -->
-        <div class="sidebar-top">
-            <div class="card" onclick="goToDetail('song1')">
-                <div class="card-thumb">
-                    <img src="https://picsum.photos/400/200?random=1" alt="歌曲1">
+    <!-- 首页（保留原样） -->
+    <div id="page-home" class="page active">
+        <div class="container">
+            <section class="profile-section">
+                <div class="profile-avatar">
+                    <img src="picture/zhanweifu.png" alt="头像">
                 </div>
-                <div class="card-info">
-                    <div class="card-line"></div>
-                    <div class="card-line"></div>
-                    <div class="card-dot"></div>
+                <div class="profile-info">
+                    <h1 class="profile-name">唐璜DonJuan</h1>
+                    <div class="profile-bio">
+                        <p>独立音乐人，热爱旋律与文字，专注氛围感叙事创作。</p>
+                    </div>
                 </div>
-            </div>
-            <div class="card" onclick="goToDetail('song2')">
-                <div class="card-thumb">
-                    <img src="https://picsum.photos/400/200?random=2" alt="歌曲2">
+            </section>
+
+            <section class="works-section">
+                <h2 class="section-title">已发行的作品</h2>
+                <div class="works-grid">
+                    <div class="work-card" onclick="goToDetail('gaza','home')">
+                        <div class="work-cover">
+                            <img src="picture/gaza.jpg" alt="Gaza封面">
+                        </div>
+                        <div class="work-name">
+                            <p class="song-title">Gaza</p>
+                        </div>
+                    </div>
+                    <div class="work-card" onclick="goToDetail('letter','home')">
+                        <div class="work-cover">
+                            <img src="picture/letter.png" alt="一封信封面">
+                        </div>
+                        <div class="work-name">
+                            <p class="song-title">一封信</p>
+                        </div>
+                    </div>
+                    <div class="work-card" onclick="goToDetail('summer','home')">
+                        <div class="work-cover">
+                            <img src="picture/summer.jpg" alt="夏日封面">
+                        </div>
+                        <div class="work-name">
+                            <p class="song-title">夏日</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-info">
-                    <div class="card-line"></div>
-                    <div class="card-line"></div>
-                    <div class="card-dot"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- 曲序页（从JSON读取） -->
+    <div id="page-playlist" class="page">
+        <div class="container">
+            <h2 class="section-title">曲序</h2>
+            <div class="playlist-table">
+                <div class="table-header">
+                    <div class="col-num">序号</div>
+                    <div class="col-cover">封面</div>
+                    <div class="col-title">歌曲名称</div>
+                    <div class="col-time">时间</div>
+                    <div class="col-age">年份</div>
+                    <div class="col-note">备注</div>
+                    <div class="col-play">播放</div>
                 </div>
+                <div id="playlist-body"></div>
             </div>
         </div>
+    </div>
 
-        <!-- 左侧下：列表 -->
-        <div class="sidebar-bottom">
-            <div class="list-item" onclick="goToDetail('song3')">
-                <img src="https://picsum.photos/80/80?random=3" alt="歌曲3">
-                <div class="list-text">
-                    <div class="list-line"></div>
-                    <div class="list-line"></div>
+    <!-- 专辑列表（保留原样） -->
+    <div id="page-album" class="page">
+        <div class="container">
+            <h2 class="section-title">专辑/EP</h2>
+            <div class="album-list">
+                <div class="album-row" onclick="openAlbum('album1')">
+                    <div class="album-cover">
+                        <img src="picture/gaza.jpg" alt="专辑封面">
+                    </div>
+                    <div class="album-info">
+                        <h3>氛围感叙事</h3>
+                        <p>发行时间：2025-06-15 | 风格：独立流行</p>
+                    </div>
                 </div>
-                <div class="list-dot"></div>
-            </div>
-            <div class="list-item" onclick="goToDetail('song4')">
-                <img src="https://picsum.photos/80/80?random=4" alt="歌曲4">
-                <div class="list-text">
-                    <div class="list-line"></div>
-                    <div class="list-line"></div>
+                <div class="album-row" onclick="openAlbum('album2')">
+                    <div class="album-cover">
+                        <img src="picture/letter.png" alt="专辑封面">
+                    </div>
+                    <div class="album-info">
+                        <h3>极简叙事EP</h3>
+                        <p>发行时间：2025-03-20 | 风格：极简民谣</p>
+                    </div>
                 </div>
-                <div class="list-dot"></div>
-            </div>
-            <div class="list-item" onclick="goToDetail('song5')">
-                <img src="https://picsum.photos/80/80?random=5" alt="歌曲5">
-                <div class="list-text">
-                    <div class="list-line"></div>
-                    <div class="list-line"></div>
-                </div>
-                <div class="list-dot"></div>
-            </div>
-        </div>
-
-        <!-- 主内容区：大图卡片（放你的letter.png） -->
-        <div class="main-content">
-            <div class="main-card" onclick="goToDetail('song6')">
-                <div class="main-thumb">
-                    <img src="./picture/letter.png" alt="歌曲6">
-                </div>
-                <div class="main-info">
-                    <div class="main-line top"></div>
-                    <div class="main-line"></div>
-                    <div class="main-line"></div>
-                    <div class="main-line"></div>
-                    <div class="main-line"></div>
-                    <div class="main-dot"></div>
-                    <div class="main-buttons">
-                        <div class="btn"></div>
-                        <div class="btn"></div>
+                <div class="album-row" onclick="openAlbum('album3')">
+                    <div class="album-cover">
+                        <img src="picture/summer.jpg" alt="专辑封面">
+                    </div>
+                    <div class="album-info">
+                        <h3>夏日限定</h3>
+                        <p>发行时间：2024-07-15 | 风格：青春流行</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- 底部四宫格（放你的gaza.jpg和summer.jpg） -->
-        <div class="bottom-grid">
-            <div class="grid-card" onclick="goToDetail('song7')">
-                <img src="./picture/gaza.jpg" alt="歌曲7">
-                <div class="grid-dot"></div>
+    <!-- 专辑详情页（保留原样） -->
+    <div id="page-album-detail" class="page">
+        <div class="container">
+            <button class="back-btn" onclick="switchTab('album')">← 返回专辑列表</button>
+            <div class="album-detail-header">
+                <div class="detail-cover">
+                    <img id="detail-album-cover" src="" alt="专辑封面">
+                </div>
+                <div class="detail-info">
+                    <h2 id="detail-album-title">专辑名称</h2>
+                    <p id="detail-album-date">发行时间：</p>
+                    <p id="detail-album-style">风格：</p>
+                </div>
             </div>
-            <div class="grid-card" onclick="goToDetail('song8')">
-                <img src="./picture/summer.jpg" alt="歌曲8">
-                <div class="grid-dot"></div>
+            <div class="album-tracklist">
+                <h3>曲目列表</h3>
+                <div class="playlist-table album-track">
+                    <div class="table-header">
+                        <div class="col-num">序号</div>
+                        <div class="col-code">创作编号</div>
+                        <div class="col-title">歌曲名称</div>
+                        <div class="col-time">时间</div>
+                        <div class="col-play">播放</div>
+                    </div>
+                    <div id="tracklist-body"></div>
+                </div>
             </div>
-            <div class="grid-card" onclick="goToDetail('song9')">
-                <img src="https://picsum.photos/200/200?random=9" alt="歌曲9">
-                <div class="grid-dot"></div>
-            </div>
-            <div class="grid-card" onclick="goToDetail('song10')">
-                <img src="https://picsum.photos/200/200?random=10" alt="歌曲10">
-                <div class="grid-dot"></div>
-            </div>
+        </div>
+    </div>
+
+    <!-- 文学作品 -->
+    <div id="page-literature" class="page">
+        <div class="container">
+            <h2 class="section-title">文学作品</h2>
+            <div class="empty-content"></div>
         </div>
     </div>
 
