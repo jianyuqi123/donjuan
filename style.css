@@ -538,23 +538,69 @@ body {
         padding: 14px;
     }
 
-    /* ==========================
-       顶部导航
-    ========================== */
+/* ==========================
+   顶部导航（手机）
+========================== */
 
-    .top-header {
-        padding: 10px 14px;
-    }
+.top-header {
 
-    .top-nav {
-        gap: 18px;
-        flex-wrap: wrap;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 
-    .nav-item {
-        font-size: 15px;
-        white-space: nowrap;
-    }
+    padding: 10px 12px;
+    gap: 12px;
+}
+
+/* 四个导航 */
+.top-nav {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 8px;
+
+    width: 100%;
+}
+
+/* 导航按钮 */
+.nav-item {
+
+    width: 100%;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    padding: 10px 0;
+
+    border-radius: 10px;
+
+    white-space: nowrap;
+
+    word-break: keep-all;
+
+    writing-mode: horizontal-tb;
+}
+
+/* 搜索框单独一行 */
+.search-box {
+
+    width: 100%;
+}
+
+.search-input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    font-size: 14px;
+
+    height: 42px;
+}
 
     /* ==========================
        标题缩小
