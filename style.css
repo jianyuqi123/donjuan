@@ -753,3 +753,156 @@ body {
         font-size: 14px;
     }
 }
+
+/* ===================================
+   手机端 detail 页面重构
+=================================== */
+
+@media screen and (max-width:768px){
+
+    /* ==========================
+       首页顶部遮挡修复
+    ========================== */
+
+    .top-header{
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background:#3a3a3a;
+    }
+
+    /* 搜索框换行后避免压内容 */
+    .page{
+        padding-top:20px;
+    }
+
+    /* ==========================
+       detail 页面
+    ========================== */
+
+    /* 外层改成纵向 */
+    .detail-container,
+    .player-layout,
+    .song-container{
+        display:flex;
+        flex-direction:column;
+    }
+
+    /* 去掉封面 */
+    .song-cover,
+    .cover-area,
+    .album-cover,
+    .music-cover{
+        display:none !important;
+    }
+
+    /* 左右布局取消 */
+    .left-panel,
+    .right-panel{
+        width:100%;
+    }
+
+    /* 播放器区域 */
+    .audio-player{
+        width:100%;
+        margin-top:10px;
+        margin-bottom:24px;
+    }
+
+    /* 进度条 */
+    .progress-container{
+        width:100%;
+    }
+
+    /* 播放区域 */
+    .controls{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:24px;
+        margin-top:12px;
+    }
+
+    /* 时间 */
+    .time-display{
+        font-size:14px;
+    }
+
+    /* 播放按钮 */
+    .play-button{
+        width:60px;
+        height:60px;
+    }
+/* ==========================
+   切换按钮（手机横向）
+========================== */
+
+.detail-tabs,
+.tab-buttons{
+
+    display:flex;
+    flex-direction:row;
+
+    justify-content:center;
+    align-items:center;
+
+    gap:10px;
+
+    width:100%;
+    margin-bottom:20px;
+}
+
+.detail-tab,
+.tab-btn{
+
+    flex:1;
+
+    min-width:0;
+
+    text-align:center;
+
+    white-space:nowrap;
+    writing-mode:horizontal-tb;
+
+    font-size:15px;
+
+    padding:12px 10px;
+}
+    /* ==========================
+       歌词阅读体验
+    ========================== */
+
+    #lyrics-content,
+    .lyrics-content{
+
+        width:100%;
+
+        font-size:17px;
+        line-height:2;
+
+        white-space:pre-wrap;
+        word-break:keep-all;
+        writing-mode:horizontal-tb;
+
+        overflow-wrap:break-word;
+    }
+
+    /* 信息 / 手记 */
+    #song-info,
+    #song-note{
+        font-size:15px;
+        line-height:1.9;
+    }
+
+    /* 标题 */
+    #song-title{
+        font-size:30px;
+        margin-bottom:16px;
+    }
+
+    /* 返回按钮 */
+    .back-btn{
+        margin-bottom:20px;
+        font-size:18px;
+    }
+}
