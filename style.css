@@ -906,3 +906,140 @@ body {
         font-size:18px;
     }
 }
+
+/* ===================================
+   手机端 detail 页面重构
+=================================== */
+
+@media screen and (max-width:768px){
+
+    /* detail整体改纵向 */
+    .detail-wrap{
+        display:flex !important;
+        flex-direction:column !important;
+    }
+
+    /* 左侧播放器区域 */
+    .detail-left{
+        width:100% !important;
+        display:flex;
+        flex-direction:column;
+    }
+
+    /* 右侧内容区域 */
+    .detail-right{
+        width:100% !important;
+    }
+
+    /* 去掉封面 */
+    .player-cover{
+        display:none !important;
+    }
+
+    /* 顶部播放器 */
+    .player-controls{
+        width:100%;
+        margin:0 0 20px 0;
+    }
+
+    /* 进度条 */
+    .progress-bar{
+        width:100%;
+    }
+
+    /* 播放区域 */
+    .control-row{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:24px;
+
+        margin-top:12px;
+    }
+
+    /* 播放按钮 */
+    .play-toggle{
+        width:56px;
+        height:56px;
+        font-size:28px;
+    }
+
+    /* 时间 */
+    #cur,
+    #dur{
+        font-size:15px;
+    }
+
+    /* ==========================
+       三按钮（横向）
+    ========================== */
+
+    .tab-buttons{
+
+        display:flex !important;
+
+        flex-direction:row !important;
+
+        justify-content:space-between;
+
+        align-items:center;
+
+        gap:10px;
+
+        width:100%;
+
+        margin-bottom:24px;
+    }
+
+    .tab-btn{
+
+        flex:1;
+
+        width:auto !important;
+        min-width:0;
+
+        text-align:center;
+
+        white-space:nowrap;
+        writing-mode:horizontal-tb;
+
+        font-size:15px;
+
+        padding:12px 10px;
+    }
+
+    /* 歌词 */
+    .lyrics-box{
+        width:100%;
+
+        font-size:18px;
+        line-height:2;
+
+        white-space:pre-wrap;
+        word-break:keep-all;
+        writing-mode:horizontal-tb;
+    }
+
+    /* 信息/手记 */
+    .info-box,
+    .note-box{
+        font-size:15px;
+        line-height:1.9;
+    }
+
+    /* 返回按钮 */
+    .back-btn{
+        font-size:18px;
+    }
+
+    /* 顶部搜索换行遮挡修复 */
+    .top-header{
+        position:sticky;
+        top:0;
+        z-index:999;
+    }
+
+    .page{
+        padding-top:20px;
+    }
+}
