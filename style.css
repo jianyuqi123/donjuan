@@ -369,3 +369,341 @@ body {
     background: #444;
     border-radius: 8px;
 }
+/* ===================================
+   专辑 / EP 页面
+=================================== */
+
+/* 分组 */
+.album-group {
+    margin-top: 36px;
+}
+
+/* 标题：专辑 / EP */
+.album-group-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #666;
+}
+
+/* 一列排列 */
+.album-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 每张专辑卡 */
+.album-row {
+    background: #2b2b2b;
+    border-radius: 14px;
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: all .25s ease;
+    border: 1px solid #3c3c3c;
+}
+
+/* hover */
+.album-row:hover {
+    transform: translateY(-2px);
+    background: #343434;
+    border-color: #666;
+}
+
+/* 专辑信息 */
+.album-info h3 {
+    font-size: 24px;
+    margin-bottom: 14px;
+    color: #fff;
+}
+
+/* 文本 */
+.album-info p {
+    font-size: 15px;
+    color: #cfcfcf;
+    line-height: 1.9;
+    margin: 4px 0;
+}
+
+/* ===================================
+   专辑详情页
+=================================== */
+
+.album-detail-header {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+/* 专辑封面 */
+.detail-cover img {
+    width: 220px;
+    border-radius: 14px;
+    object-fit: cover;
+}
+
+/* 右侧文字 */
+.detail-info {
+    flex: 1;
+}
+
+.detail-info h2 {
+    font-size: 36px;
+    margin-bottom: 18px;
+    color: #fff;
+}
+
+.detail-info p {
+    font-size: 17px;
+    color: #cfcfcf;
+    margin-bottom: 12px;
+}
+
+/* 曲目列表标题 */
+.album-tracklist h3 {
+    font-size: 24px;
+    margin-bottom: 18px;
+}
+
+/* 歌曲列表行 */
+.album-track .table-row {
+    cursor: pointer;
+    transition: .2s;
+}
+
+.album-track .table-row:hover {
+    background: rgba(255,255,255,.08);
+}
+
+/* 返回按钮 */
+.back-btn {
+    margin-bottom: 30px;
+}
+/* ===================================
+   专辑卡片：封面 + 信息
+=================================== */
+
+.album-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+/* 左侧封面容器 */
+.album-cover-box {
+    flex-shrink: 0;
+}
+
+/* 1:1 封面 */
+.album-cover-img {
+    width: 180px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+}
+
+/* 右侧文字 */
+.album-info {
+    flex: 1;
+}
+
+.album-info h3 {
+    font-size: 30px;
+    margin-bottom: 18px;
+    color: #fff;
+}
+
+.album-info p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #d3d3d3;
+    margin: 8px 0;
+}
+/* ===================================
+   手机端适配（竖屏）
+=================================== */
+
+@media screen and (max-width: 768px) {
+
+    /* 页面边距 */
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding: 14px;
+    }
+
+    /* ==========================
+       顶部导航
+    ========================== */
+
+    .top-header {
+        padding: 10px 14px;
+    }
+
+    .top-nav {
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .nav-item {
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    /* ==========================
+       标题缩小
+    ========================== */
+
+    .section-title {
+        font-size: 30px;
+    }
+
+    .album-group-title {
+        font-size: 24px;
+    }
+
+    /* ==========================
+       首页卡片
+    ========================== */
+
+    .works-grid {
+        gap: 14px;
+    }
+
+    .work-card {
+        width: 140px;
+    }
+
+    .song-title {
+        font-size: 14px;
+    }
+
+    /* ==========================
+       曲序表格
+    ========================== */
+
+    .playlist-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-header,
+    .table-row {
+        min-width: 760px;
+    }
+
+    .table-header div,
+    .table-row div {
+        white-space: nowrap;
+        word-break: keep-all;
+        writing-mode: horizontal-tb;
+    }
+
+    /* 列字体缩小 */
+    .col-title,
+    .col-note,
+    .col-age,
+    .col-time,
+    .col-code,
+    .col-num {
+        font-size: 13px;
+    }
+
+    /* ==========================
+       专辑卡片
+    ========================== */
+
+    .album-row {
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .album-cover-img {
+        width: 95px;
+        min-width: 95px;
+    }
+
+    .album-info {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .album-info h3 {
+        font-size: 24px;
+
+        /* 不允许竖排 */
+        white-space: nowrap;
+        word-break: keep-all;
+        writing-mode: horizontal-tb;
+    }
+
+    .album-info p {
+        font-size: 13px;
+        line-height: 1.7;
+
+        /* 防止变竖字 */
+        white-space: nowrap;
+        word-break: keep-all;
+        writing-mode: horizontal-tb;
+    }
+
+    /* ==========================
+       专辑详情页
+    ========================== */
+
+    .album-detail-header {
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .detail-cover img {
+        width: 110px;
+    }
+
+    .detail-info h2 {
+        font-size: 28px;
+        white-space: nowrap;
+    }
+
+    .detail-info p {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    /* ==========================
+       歌词页
+    ========================== */
+
+    #song-title {
+        font-size: 28px;
+    }
+
+    #lyrics-content {
+        font-size: 14px;
+        line-height: 1.9;
+
+        /* 关键：横排 */
+        writing-mode: horizontal-tb;
+        word-break: keep-all;
+    }
+
+    #song-info,
+    #song-note {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    /* ==========================
+       搜索框
+    ========================== */
+
+    .search-input {
+        font-size: 14px;
+    }
+}

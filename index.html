@@ -2,164 +2,405 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>唐璜 DonJuan</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
 <body>
+
+    <!-- 顶部导航 -->
     <header class="top-header">
+
         <nav class="top-nav">
-            <div class="nav-item active" onclick="switchTab('home')">首页</div>
-            <div class="nav-item" onclick="switchTab('playlist')">曲序</div>
-            <div class="nav-item" onclick="switchTab('album')">专辑/EP</div>
-            <div class="nav-item" onclick="switchTab('literature')">文学作品</div>
+
+            <div
+                class="nav-item active"
+                onclick="switchTab('home')"
+            >
+                首页
+            </div>
+
+            <div
+                class="nav-item"
+                onclick="switchTab('playlist')"
+            >
+                曲序
+            </div>
+
+            <div
+                class="nav-item"
+                onclick="switchTab('album')"
+            >
+                专辑 / EP
+            </div>
+
+            <div
+                class="nav-item"
+                onclick="switchTab('literature')"
+            >
+                文学作品
+            </div>
+
         </nav>
+
+        <!-- 搜索 -->
         <div class="search-box">
-            <input type="text" placeholder="搜索歌曲..." class="search-input" id="search-input" oninput="searchSong()">
-            <div class="search-result" id="search-result"></div>
+
+            <input
+                type="text"
+                id="search-input"
+                class="search-input"
+                placeholder="搜索歌曲..."
+                oninput="searchSong()"
+            >
+
+            <div
+                id="search-result"
+                class="search-result"
+            ></div>
+
         </div>
+
     </header>
 
-    <!-- 首页（保留原样） -->
-    <div id="page-home" class="page active">
+    <!-- 首页 -->
+    <div
+        id="page-home"
+        class="page active"
+    >
+
         <div class="container">
+
             <section class="profile-section">
+
                 <div class="profile-avatar">
-                    <img src="picture/zhanweifu.png" alt="头像">
+                    <img
+                        src="picture/zhanweifu.png"
+                        alt="头像"
+                    >
                 </div>
+
                 <div class="profile-info">
-                    <h1 class="profile-name">唐璜DonJuan</h1>
+
+                    <h1 class="profile-name">
+                        唐璜 DonJuan
+                    </h1>
+
                     <div class="profile-bio">
-                        <p>独立音乐人，热爱旋律与文字，专注氛围感叙事创作。</p>
+
+                        <p>
+                            独立音乐人，
+                            热爱旋律与文字，
+                            专注氛围感叙事创作。
+                        </p>
+
                     </div>
+
                 </div>
+
             </section>
 
+            <!-- 已发行作品 -->
             <section class="works-section">
-                <h2 class="section-title">已发行的作品</h2>
+
+                <h2 class="section-title">
+                    已发行作品
+                </h2>
+
                 <div class="works-grid">
-                    <div class="work-card" onclick="goToDetail('gaza','home')">
+
+                    <div
+                        class="work-card"
+                        onclick="goToDetail('gaza','home')"
+                    >
+
                         <div class="work-cover">
-                            <img src="picture/gaza.jpg" alt="Gaza封面">
+                            <img
+                                src="picture/gaza.jpg"
+                                alt="Gaza"
+                            >
                         </div>
+
                         <div class="work-name">
-                            <p class="song-title">Gaza</p>
+                            <p class="song-title">
+                                Gaza
+                            </p>
                         </div>
+
                     </div>
-                    <div class="work-card" onclick="goToDetail('letter','home')">
+
+                    <div
+                        class="work-card"
+                        onclick="goToDetail('letter','home')"
+                    >
+
                         <div class="work-cover">
-                            <img src="picture/letter.png" alt="一封信封面">
+                            <img
+                                src="picture/letter.png"
+                                alt="一封信"
+                            >
                         </div>
+
                         <div class="work-name">
-                            <p class="song-title">一封信</p>
+                            <p class="song-title">
+                                一封信
+                            </p>
                         </div>
+
                     </div>
-                    <div class="work-card" onclick="goToDetail('summer','home')">
+
+                    <div
+                        class="work-card"
+                        onclick="goToDetail('summer','home')"
+                    >
+
                         <div class="work-cover">
-                            <img src="picture/summer.jpg" alt="夏日封面">
+                            <img
+                                src="picture/summer.jpg"
+                                alt="夏日"
+                            >
                         </div>
+
                         <div class="work-name">
-                            <p class="song-title">夏日</p>
+                            <p class="song-title">
+                                夏日
+                            </p>
                         </div>
+
                     </div>
+
                 </div>
+
             </section>
+
         </div>
+
     </div>
 
-    <!-- 曲序页（从JSON读取） -->
-    <div id="page-playlist" class="page">
+    <!-- 曲序页 -->
+    <div
+        id="page-playlist"
+        class="page"
+    >
+
         <div class="container">
-            <h2 class="section-title">曲序</h2>
+
+            <h2 class="section-title">
+                曲序
+            </h2>
+
             <div class="playlist-table">
+
                 <div class="table-header">
-                    <div class="col-num">序号</div>
-                    <div class="col-cover">封面</div>
-                    <div class="col-title">歌曲名称</div>
-                    <div class="col-time">时间</div>
-                    <div class="col-age">年份</div>
-                    <div class="col-note">备注</div>
-                    <div class="col-play">播放</div>
+
+                    <div class="col-num">
+                        序号
+                    </div>
+
+                    <div class="col-cover">
+                        封面
+                    </div>
+
+                    <div class="col-title">
+                        歌曲名称
+                    </div>
+
+                    <div class="col-time">
+                        时间
+                    </div>
+
+                    <div class="col-age">
+                        年份
+                    </div>
+
+                    <div class="col-note">
+                        备注
+                    </div>
+
+                    <div class="col-play">
+                        播放
+                    </div>
+
                 </div>
+
                 <div id="playlist-body"></div>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- 专辑列表（保留原样） -->
-    <div id="page-album" class="page">
+    <!-- 专辑 / EP -->
+    <div
+        id="page-album"
+        class="page"
+    >
+
         <div class="container">
-            <h2 class="section-title">专辑/EP</h2>
-            <div class="album-list">
-                <div class="album-row" onclick="openAlbum('album1')">
-                    <div class="album-cover">
-                        <img src="picture/gaza.jpg" alt="专辑封面">
-                    </div>
-                    <div class="album-info">
-                        <h3>氛围感叙事</h3>
-                        <p>发行时间：2025-06-15 | 风格：独立流行</p>
-                    </div>
-                </div>
-                <div class="album-row" onclick="openAlbum('album2')">
-                    <div class="album-cover">
-                        <img src="picture/letter.png" alt="专辑封面">
-                    </div>
-                    <div class="album-info">
-                        <h3>极简叙事EP</h3>
-                        <p>发行时间：2025-03-20 | 风格：极简民谣</p>
-                    </div>
-                </div>
-                <div class="album-row" onclick="openAlbum('album3')">
-                    <div class="album-cover">
-                        <img src="picture/summer.jpg" alt="专辑封面">
-                    </div>
-                    <div class="album-info">
-                        <h3>夏日限定</h3>
-                        <p>发行时间：2024-07-15 | 风格：青春流行</p>
-                    </div>
-                </div>
-            </div>
+
+            <h2 class="section-title">
+                专辑 / EP
+            </h2>
+
+            <!-- 专辑 -->
+            <section class="album-group">
+
+                <h3 class="album-group-title">
+                    专辑
+                </h3>
+
+                <div
+                    id="album-list"
+                    class="album-list"
+                ></div>
+
+            </section>
+
+            <!-- EP -->
+            <section class="album-group">
+
+                <h3 class="album-group-title">
+                    EP
+                </h3>
+
+                <div
+                    id="ep-list"
+                    class="album-list"
+                ></div>
+
+            </section>
+
         </div>
+
     </div>
 
-    <!-- 专辑详情页（保留原样） -->
-    <div id="page-album-detail" class="page">
+    <!-- 专辑详情页 -->
+    <div
+        id="page-album-detail"
+        class="page"
+    >
+
         <div class="container">
-            <button class="back-btn" onclick="switchTab('album')">← 返回专辑列表</button>
+
+            <button
+                class="back-btn"
+                onclick="switchTab('album')"
+            >
+                ← 返回专辑列表
+            </button>
+
             <div class="album-detail-header">
+
                 <div class="detail-cover">
-                    <img id="detail-album-cover" src="" alt="专辑封面">
+
+                    <img
+                        id="detail-album-cover"
+                        src=""
+                        alt="专辑封面"
+                    >
+
                 </div>
+
                 <div class="detail-info">
-                    <h2 id="detail-album-title">专辑名称</h2>
-                    <p id="detail-album-date">发行时间：</p>
-                    <p id="detail-album-style">风格：</p>
+
+                    <h2
+                        id="detail-album-title"
+                    ></h2>
+
+                    <p
+                        id="detail-album-date"
+                    ></p>
+
+                    <p
+                        id="detail-album-style"
+                    ></p>
+
                 </div>
+
             </div>
+
             <div class="album-tracklist">
-                <h3>曲目列表</h3>
+
+                <h3>
+                    曲目列表
+                </h3>
+
                 <div class="playlist-table album-track">
+
                     <div class="table-header">
-                        <div class="col-num">序号</div>
-                        <div class="col-code">创作编号</div>
-                        <div class="col-title">歌曲名称</div>
-                        <div class="col-time">时间</div>
-                        <div class="col-play">播放</div>
+
+                        <div class="col-num">
+                            序号
+                        </div>
+
+                        <div class="col-code">
+                            创作编号
+                        </div>
+
+                        <div class="col-title">
+                            歌曲名称
+                        </div>
+
+                        <div class="col-time">
+                            时间
+                        </div>
+
+                        <div class="col-play">
+                            播放
+                        </div>
+
                     </div>
-                    <div id="tracklist-body"></div>
+
+                    <div
+                        id="tracklist-body"
+                    ></div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- 文学作品 -->
-    <div id="page-literature" class="page">
+    <div
+        id="page-literature"
+        class="page"
+    >
+
         <div class="container">
-            <h2 class="section-title">文学作品</h2>
-            <div class="empty-content"></div>
+
+            <h2 class="section-title">
+                文学作品
+            </h2>
+
+            <div
+                class="empty-content"
+            ></div>
+
         </div>
+
     </div>
 
+    <!-- 数据 -->
+    <script src="js/playlist.js"></script>
+    <script src="js/lyrics.js"></script>
+    <script src="js/album.js"></script>
+
+    <!-- 主脚本 -->
     <script src="script.js"></script>
+
 </body>
 </html>
