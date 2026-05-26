@@ -1,528 +1,643 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta charset="UTF-8">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>歌曲播放</title>
+<title>歌曲详情</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+<link
+    rel="stylesheet"
+    href="style.css"
+>
 </head>
 
 <body class="player-page">
 
-    <!-- 返回栏 -->
-    <div class="back-bar">
-        <button
-            class="back-btn"
-            id="backBtn"
+<!-- 返回栏 -->
+<div class="back-bar">
+
+    <button
+        class="back-btn"
+        id="backBtn"
+    >
+        ← 返回
+    </button>
+
+    <button
+        class="mini-btn"
+        id="miniBtn"
+    >
+        ─
+    </button>
+
+</div>
+
+<!-- 播放器 -->
+<div
+    class="detail-wrap"
+    id="detailWrap"
+>
+
+    <!-- 左侧 -->
+    <div class="detail-left">
+
+        <div class="player-cover">
+
+            <img
+                id="song-cover"
+                src="picture/zhanweifu.png"
+                alt="cover"
+            >
+
+        </div>
+
+        <div class="player-controls">
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    id="progress"
+                ></div>
+
+            </div>
+
+            <div class="control-row">
+
+                <span id="cur">
+                    00:00
+                </span>
+
+                <button
+                    id="playBtn"
+                    class="play-toggle"
+                >
+                    ▶
+                </button>
+
+                <span id="dur">
+                    00:00
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 右侧 -->
+    <div class="detail-right">
+
+        <div class="tab-buttons">
+
+            <button
+                class="tab-btn active"
+                onclick="switchTabDetail('lyrics')"
+            >
+                歌词
+            </button>
+
+            <button
+                class="tab-btn"
+                onclick="switchTabDetail('info')"
+            >
+                歌曲信息
+            </button>
+
+            <button
+                class="tab-btn"
+                onclick="switchTabDetail('note')"
+            >
+                创作手记
+            </button>
+
+        </div>
+
+        <!-- 歌词 -->
+        <div
+            id="tab-lyrics"
+            class="tab-content active"
         >
-            ← 返回
-        </button>
-    </div>
 
-    <div class="detail-wrap">
+            <div
+                class="lyrics-box"
+                id="lyrics-content"
+            ></div>
 
-        <!-- 左侧播放器 -->
-        <div class="detail-left">
+        </div>
 
-            <div class="player-cover">
-                <img
-                    id="song-cover"
-                    src="picture/zhanweifu.png"
-                    alt="歌曲封面"
-                >
-            </div>
+        <!-- 信息 -->
+        <div
+            id="tab-info"
+            class="tab-content"
+        >
 
-            <div class="player-controls">
+            <div class="info-box">
 
-                <div class="progress-bar">
-                    <div
-                        class="progress-fill"
-                        id="progress"
-                    ></div>
-                </div>
+                <p>
+                    <strong>歌曲：</strong>
+                    <span id="song-title"></span>
+                </p>
 
-                <div class="control-row">
+                <p>
+                    <strong>歌手：</strong>
+                    唐璜 DonJuan
+                </p>
 
-                    <span id="cur">
-                        00:00
-                    </span>
+                <p>
+                    <strong>时长：</strong>
+                    <span id="song-duration"></span>
+                </p>
 
-                    <button
-                        id="playBtn"
-                        class="play-toggle"
-                    >
-                        ▶
-                    </button>
+                <p>
+                    <strong>信息：</strong>
+                    <span id="song-info"></span>
+                </p>
 
-                    <span id="dur">
-                        00:00
-                    </span>
-
-                </div>
             </div>
 
         </div>
 
-        <!-- 右侧详情 -->
-        <div class="detail-right">
+        <!-- 手记 -->
+        <div
+            id="tab-note"
+            class="tab-content"
+        >
 
-            <div class="tab-buttons">
-
-                <button
-                    class="tab-btn active"
-                    onclick="switchTabDetail('lyrics')"
-                >
-                    歌词
-                </button>
-
-                <button
-                    class="tab-btn"
-                    onclick="switchTabDetail('info')"
-                >
-                    歌曲信息
-                </button>
-
-                <button
-                    class="tab-btn"
-                    onclick="switchTabDetail('note')"
-                >
-                    创作手记
-                </button>
-
-            </div>
-
-            <!-- 歌词 -->
             <div
-                id="tab-lyrics"
-                class="tab-content active"
-            >
-                <div
-                    class="lyrics-box"
-                    id="lyrics-content"
-                ></div>
-            </div>
-
-            <!-- 信息 -->
-            <div
-                id="tab-info"
-                class="tab-content"
-            >
-
-                <div class="info-box">
-
-                    <p>
-                        <strong>歌曲名称：</strong>
-                        <span id="song-title"></span>
-                    </p>
-
-                    <p>
-                        <strong>歌手：</strong>
-                        唐璜 DonJuan
-                    </p>
-
-                    <p>
-                        <strong>时长：</strong>
-                        <span id="song-duration"></span>
-                    </p>
-
-                    <p>
-                        <strong>信息：</strong>
-                        <span id="song-info"></span>
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- 创作手记 -->
-            <div
-                id="tab-note"
-                class="tab-content"
-            >
-                <div
-                    class="note-box"
-                    id="song-note"
-                ></div>
-            </div>
+                id="song-note"
+                class="note-box"
+            ></div>
 
         </div>
+
     </div>
 
-    <!-- 音频 -->
-    <audio id="audio"></audio>
+</div>
 
-    <!-- 数据 -->
-    <script src="js/playlist.js"></script>
-    <script src="js/lyrics.js"></script>
+<!-- mini player -->
+<div
+    class="mini-player"
+    id="miniPlayer"
+>
 
-    <!-- 主脚本 -->
-    <script src="script.js"></script>
+    <button
+        id="miniPlayBtn"
+        class="mini-play-btn"
+    >
+        ▶
+    </button>
 
-    <script>
+    <div class="mini-song-info">
 
-        const urlParams =
-            new URLSearchParams(
-                location.search
-            );
+        <div id="miniSongTitle">
+            未播放
+        </div>
 
-        const title =
-            urlParams.get('title');
+        <div class="mini-progress">
 
-        const songId =
-            urlParams.get('song');
+            <div
+                id="miniProgress"
+                class="mini-progress-fill"
+            ></div>
 
-        const from =
-            urlParams.get('from');
+        </div>
 
-        const albumId =
-            urlParams.get('album');
+    </div>
 
-        let matchedLyrics = null;
-        let currentSong = null;
+</div>
 
-        // =================================
-        // 读取歌曲数据
-        // =================================
+<audio id="audio"></audio>
 
-        if (title) {
+<!-- 数据 -->
+<script src="js/playlist.js"></script>
+<script src="js/lyrics.js"></script>
 
-            matchedLyrics =
-                window.lyricsData.find(
-                    item =>
-                        item.title === title
-                );
-        }
+<script>
+
+/* ==========================
+   参数
+========================== */
+
+const params =
+    new URLSearchParams(
+        location.search
+    );
+
+const title =
+    params.get("title");
+
+/* ==========================
+   数据读取
+========================== */
+
+let currentSong =
+    window.playlist?.find(
+        item =>
+            item.title === title
+    );
+
+let lyric =
+    window.lyricsData?.find(
+        item =>
+            item.title === title
+    );
+
+const DEFAULT_COVER =
+    "picture/zhanweifu.png";
+
+const TEST_AUDIO =
+    "music/summer.mp3";
+
+function getCoverPath(cover) {
+
+    if (
+        !cover ||
+        cover === "占位符"
+    ) {
+        return DEFAULT_COVER;
+    }
+
+    if (
+        cover.startsWith("picture/") ||
+        cover.startsWith("http://") ||
+        cover.startsWith("https://")
+    ) {
+        return cover;
+    }
+
+    return "picture/" + cover;
+}
+
+/* ==========================
+   DOM
+========================== */
+
+const audio =
+    document.getElementById(
+        "audio"
+    );
+
+const playBtn =
+    document.getElementById(
+        "playBtn"
+    );
+
+const miniPlayBtn =
+    document.getElementById(
+        "miniPlayBtn"
+    );
+
+const progress =
+    document.getElementById(
+        "progress"
+    );
+
+const progressBar =
+    document.querySelector(
+        ".progress-bar"
+    );
+
+const miniProgress =
+    document.getElementById(
+        "miniProgress"
+    );
+
+/* ==========================
+   初始化
+========================== */
+
+if (currentSong) {
+
+    document.getElementById(
+        "song-title"
+    ).innerText =
+        currentSong.title;
+
+    document.getElementById(
+        "miniSongTitle"
+    ).innerText =
+        currentSong.title;
+
+    document.getElementById(
+        "song-duration"
+    ).innerText =
+        currentSong.duration ||
+        "00:00";
+
+    document.getElementById(
+        "song-cover"
+    ).src =
+        getCoverPath(
+            currentSong.cover
+        );
+
+    audio.src =
+        currentSong.audio ||
+        TEST_AUDIO;
+}
+
+/* 歌词 */
+
+document.getElementById(
+    "lyrics-content"
+).innerText =
+    lyric?.lyrics ||
+    "暂无歌词";
+
+document.getElementById(
+    "song-info"
+).innerText =
+    lyric?.info ||
+    "暂无信息";
+
+document.getElementById(
+    "song-note"
+).innerText =
+    lyric?.note ||
+    "暂无创作手记";
+
+/* ==========================
+   播放器
+========================== */
+
+function fmt(t) {
+
+    if (isNaN(t))
+        return "00:00";
+
+    const m =
+        String(
+            Math.floor(t / 60)
+        ).padStart(2, "0");
+
+    const s =
+        String(
+            Math.floor(t % 60)
+        ).padStart(2, "0");
+
+    return `${m}:${s}`;
+}
+
+audio.onloadedmetadata =
+    () => {
+
+        document.getElementById(
+            "dur"
+        ).innerText =
+            fmt(audio.duration);
+    };
+
+audio.ontimeupdate =
+    () => {
+
+        updateProgress();
+    };
+
+function updateProgress() {
+
+        document.getElementById(
+            "cur"
+        ).innerText =
+            fmt(audio.currentTime);
 
         if (
-            !matchedLyrics &&
-            songId &&
-            typeof songs !==
-                'undefined'
+            audio.duration
         ) {
 
-            currentSong =
-                songs[songId];
+            const percent =
+                audio.currentTime /
+                audio.duration *
+                100;
 
-            if (currentSong) {
+            progress.style.width =
+                percent + "%";
 
-                matchedLyrics =
-                    window.lyricsData.find(
-                        item =>
-                            item.title ===
-                            currentSong.title
-                    );
-            }
+            miniProgress.style.width =
+                percent + "%";
         }
+}
 
-        // =================================
-        // 歌词渲染
-        // =================================
+function seekByClientX(clientX) {
 
-        if (matchedLyrics) {
+    if (!audio.duration)
+        return;
 
-            document
-                .getElementById(
-                    'song-title'
-                )
-                .innerText =
-                matchedLyrics.title;
+    const rect =
+        progressBar.getBoundingClientRect();
 
-            document
-                .getElementById(
-                    'lyrics-content'
-                )
-                .innerText =
-                matchedLyrics.lyrics ||
-                '暂无歌词';
+    const ratio =
+        Math.min(
+            1,
+            Math.max(
+                0,
+                (clientX - rect.left) / rect.width
+            )
+        );
 
-            document
-                .getElementById(
-                    'song-info'
-                )
-                .innerText =
-                matchedLyrics.info ||
-                '暂无信息';
+    audio.currentTime =
+        audio.duration * ratio;
 
-            document
-                .getElementById(
-                    'song-note'
-                )
-                .innerText =
-                matchedLyrics.note ||
-                '暂无创作手记';
-        }
-        else {
+    updateProgress();
+}
 
-            document
-                .getElementById(
-                    'song-title'
-                )
-                .innerText =
-                title || '未知歌曲';
+let isSeeking =
+    false;
 
-            document
-                .getElementById(
-                    'lyrics-content'
-                )
-                .innerText =
-                '暂无歌词';
-        }
+progressBar.addEventListener(
+    "pointerdown",
+    e => {
 
-        // =================================
-        // 播放器
-        // =================================
+        isSeeking =
+            true;
 
-        if (
-            !currentSong &&
-            songId &&
-            typeof songs !==
-                'undefined'
-        ) {
+        progressBar.setPointerCapture(
+            e.pointerId
+        );
 
-            currentSong =
-                songs[songId];
-        }
+        seekByClientX(
+            e.clientX
+        );
+    }
+);
 
-        const audio =
-            document.getElementById(
-                'audio'
-            );
+progressBar.addEventListener(
+    "pointermove",
+    e => {
 
-        const playBtn =
-            document.getElementById(
-                'playBtn'
-            );
+        if (!isSeeking)
+            return;
 
-        const progress =
-            document.getElementById(
-                'progress'
-            );
+        seekByClientX(
+            e.clientX
+        );
+    }
+);
 
-        const cur =
-            document.getElementById(
-                'cur'
-            );
+progressBar.addEventListener(
+    "pointerup",
+    e => {
 
-        const dur =
-            document.getElementById(
-                'dur'
-            );
+        isSeeking =
+            false;
 
-        if (currentSong) {
+        progressBar.releasePointerCapture(
+            e.pointerId
+        );
+    }
+);
 
-            document
-                .getElementById(
-                    'song-cover'
-                )
-                .src =
-                currentSong.cover ||
-                'picture/zhanweifu.png';
+progressBar.addEventListener(
+    "pointercancel",
+    () => {
 
-            document
-                .getElementById(
-                    'song-duration'
-                )
-                .innerText =
-                currentSong.duration ||
-                '00:00';
+        isSeeking =
+            false;
+    }
+);
 
-            if (
-                currentSong.audio
-            ) {
+function togglePlay() {
 
-                audio.src =
-                    currentSong.audio;
-            }
-        }
+    if (audio.paused) {
 
-        function fmt(t) {
+        audio.play();
 
-            if (isNaN(t))
-                return '00:00';
+        playBtn.innerText =
+            "⏸";
 
-            const m =
-                String(
-                    Math.floor(
-                        t / 60
-                    )
-                ).padStart(2,'0');
+        miniPlayBtn.innerText =
+            "⏸";
 
-            const s =
-                String(
-                    Math.floor(
-                        t % 60
-                    )
-                ).padStart(2,'0');
+    } else {
 
-            return `${m}:${s}`;
-        }
+        audio.pause();
 
-        audio.onloadedmetadata =
-            () => {
+        playBtn.innerText =
+            "▶";
 
-                dur.innerText =
-                    fmt(
-                        audio.duration
-                    );
-            };
+        miniPlayBtn.innerText =
+            "▶";
+    }
+}
 
-        audio.ontimeupdate =
-            () => {
+playBtn.onclick =
+    togglePlay;
 
-                cur.innerText =
-                    fmt(
-                        audio.currentTime
-                    );
+miniPlayBtn.onclick =
+    togglePlay;
 
-                if (
-                    audio.duration
-                ) {
+/* ==========================
+   返回
+========================== */
 
-                    progress.style.width =
-                        `${
-                            (
-                                audio.currentTime
-                                /
-                                audio.duration
-                            ) * 100
-                        }%`;
-                }
-            };
+document.getElementById(
+    "backBtn"
+).onclick =
+    () => {
 
-        playBtn.onclick =
-            () => {
+        history.back();
+    };
 
-                if (
-                    audio.paused
-                ) {
+/* ==========================
+   tab
+========================== */
 
-                    audio.play();
+function switchTabDetail(tab) {
 
-                    playBtn.innerText =
-                        '⏸';
-                }
-                else {
+    document
+    .querySelectorAll(
+        ".tab-content"
+    )
+    .forEach(
+        el =>
+            el.classList.remove(
+                "active"
+            )
+    );
 
-                    audio.pause();
+    document
+    .querySelectorAll(
+        ".tab-btn"
+    )
+    .forEach(
+        el =>
+            el.classList.remove(
+                "active"
+            )
+    );
 
-                    playBtn.innerText =
-                        '▶';
-                }
-            };
+    document
+    .getElementById(
+        "tab-" + tab
+    )
+    .classList.add(
+        "active"
+    );
 
-        // =================================
-        // 返回逻辑
-        // =================================
+    event.target
+    .classList.add(
+        "active"
+    );
+}
+
+/* ==========================
+   mini player
+========================== */
+
+document.getElementById(
+    "miniBtn"
+).onclick =
+    () => {
 
         document
-            .getElementById(
-                'backBtn'
-            )
-            .onclick =
-            () => {
+        .getElementById(
+            "detailWrap"
+        )
+        .classList.add(
+            "is-minimized"
+        );
 
-                if (
-                    from ===
-                    'playlist'
-                ) {
+        document
+        .getElementById(
+            "miniPlayer"
+        )
+        .classList.add(
+            "show"
+        );
+    };
 
-                    location.href =
-                        'index.html#playlist';
+document.getElementById(
+    "miniPlayer"
+).onclick =
+    e => {
 
-                    return;
-                }
+        if (
+            e.target.id ===
+            "miniPlayBtn"
+        ) return;
 
-                if (
-                    from ===
-                    'album'
-                    &&
-                    albumId
-                ) {
+        document
+        .getElementById(
+            "detailWrap"
+        )
+        .classList.remove(
+            "is-minimized"
+        );
 
-                    location.href =
-                        `index.html#album-detail=${albumId}`;
+        document
+        .getElementById(
+            "miniPlayer"
+        )
+        .classList.remove(
+            "show"
+        );
+    };
 
-                    return;
-                }
-
-                location.href =
-                    'index.html';
-            };
-
-        // =================================
-        // 标签切换
-        // =================================
-
-        function
-        switchTabDetail(
-            tab
-        ) {
-
-            document
-                .querySelectorAll(
-                    '.tab-content'
-                )
-                .forEach(
-                    el =>
-                        el.classList
-                        .remove(
-                            'active'
-                        )
-                );
-
-            document
-                .querySelectorAll(
-                    '.tab-btn'
-                )
-                .forEach(
-                    el =>
-                        el.classList
-                        .remove(
-                            'active'
-                        )
-                );
-
-            document
-                .getElementById(
-                    `tab-${tab}`
-                )
-                .classList
-                .add(
-                    'active'
-                );
-
-            const idx =
-                [
-                    'lyrics',
-                    'info',
-                    'note'
-                ].indexOf(tab);
-
-            if (
-                idx >= 0
-            ) {
-
-                document
-                    .querySelectorAll(
-                        '.tab-btn'
-                    )
-                    [idx]
-                    .classList
-                    .add(
-                        'active'
-                    );
-            }
-        }
-
-    </script>
+</script>
 
 </body>
 </html>

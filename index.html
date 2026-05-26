@@ -1,406 +1,281 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<title>唐璜 DonJuan</title>
 
-    <title>唐璜 DonJuan</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- 顶部导航 -->
-    <header class="top-header">
+<header class="top-header">
 
-        <nav class="top-nav">
+    <nav class="top-nav">
 
-            <div
-                class="nav-item active"
-                onclick="switchTab('home')"
-            >
-                首页
-            </div>
-
-            <div
-                class="nav-item"
-                onclick="switchTab('playlist')"
-            >
-                曲序
-            </div>
-
-            <div
-                class="nav-item"
-                onclick="switchTab('album')"
-            >
-                专辑 / EP
-            </div>
-
-            <div
-                class="nav-item"
-                onclick="switchTab('literature')"
-            >
-                文学作品
-            </div>
-
-        </nav>
-
-        <!-- 搜索 -->
-        <div class="search-box">
-
-            <input
-                type="text"
-                id="search-input"
-                class="search-input"
-                placeholder="搜索歌曲..."
-                oninput="searchSong()"
-            >
-
-            <div
-                id="search-result"
-                class="search-result"
-            ></div>
-
+        <div class="nav-item active" onclick="switchTab('home')">
+            客厅 | 关于唐璜
         </div>
 
-    </header>
+        <div class="nav-item" onclick="switchTab('playlist')">
+            地下室
+        </div>
 
-    <!-- 首页 -->
-    <div
-        id="page-home"
-        class="page active"
-    >
+        <div class="nav-item work-nav-container" onclick="switchTab('work')">
+            餐厅 | 音乐作品
 
-        <div class="container">
+            <div class="work-dropdown">
+                <div class="dropdown-item multi-filter" data-type="all">全部作品</div>
+                <div class="dropdown-item multi-filter" data-type="album">专辑</div>
+                <div class="dropdown-item multi-filter" data-type="ep">EP</div>
+                <div class="dropdown-item multi-filter" data-type="single">单曲</div>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="switchTab('project')">
+            厨房 | 音乐企划
+        </div>
+
+        <div class="nav-item" onclick="switchTab('private')">
+            浴室 | 私人空间
+        </div>
+
+        <div class="nav-item" onclick="switchTab('literature')">
+            卧室 | 文学作品
+        </div>
+
+    </nav>
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="搜索歌曲..."
+            oninput="searchSong()"
+        >
+
+        <div
+            id="search-result"
+            class="search-result"
+        ></div>
+
+    </div>
+
+</header>
+
+<!-- 首页 -->
+<div id="page-home" class="page active">
+
+    <div class="container home-container">
+
+        <div class="home-main">
 
             <section class="profile-section">
 
                 <div class="profile-avatar">
-                    <img
-                        src="picture/zhanweifu.png"
-                        alt="头像"
-                    >
+                    <img src="picture/zhanweifu.png" alt="头像">
                 </div>
 
                 <div class="profile-info">
-
-                    <h1 class="profile-name">
-                        唐璜 DonJuan
-                    </h1>
+                    <h1 class="profile-name">唐璜 DonJuan</h1>
 
                     <div class="profile-bio">
-
                         <p>
-                            独立音乐人，
-                            热爱旋律与文字，
-                            专注氛围感叙事创作。
+                            独立音乐人，热爱旋律与文字，专注氛围感叙事创作。
                         </p>
-
                     </div>
-
                 </div>
 
             </section>
 
-            <!-- 已发行作品 -->
-            <section class="works-section">
+            <hr class="home-divider">
 
-                <h2 class="section-title">
-                    已发行作品
-                </h2>
+            <section class="studio-section">
+                <h2 class="studio-title">关于水龙吟</h2>
+                <p class="studio-subtitle">Hydrogen Studio</p>
 
-                <div class="works-grid">
+                <p class="studio-desc">
+                    水龙吟是一个专注于氛围感叙事的音乐创作工作室，以细腻的旋律与文字为载体，
+                    记录城市里的温柔与遗憾。这里是所有声音的起点，也是故事的容器。
+                </p>
+            </section>
 
-                    <div
-                        class="work-card"
-                        onclick="goToDetail('gaza','home')"
-                    >
+            <section class="studio-section">
+                <h2 class="studio-title">关于吊金钟</h2>
+                <p class="studio-subtitle">Diaojinzhong</p>
 
-                        <div class="work-cover">
-                            <img
-                                src="picture/gaza.jpg"
-                                alt="Gaza"
-                            >
-                        </div>
-
-                        <div class="work-name">
-                            <p class="song-title">
-                                Gaza
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div
-                        class="work-card"
-                        onclick="goToDetail('letter','home')"
-                    >
-
-                        <div class="work-cover">
-                            <img
-                                src="picture/letter.png"
-                                alt="一封信"
-                            >
-                        </div>
-
-                        <div class="work-name">
-                            <p class="song-title">
-                                一封信
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div
-                        class="work-card"
-                        onclick="goToDetail('summer','home')"
-                    >
-
-                        <div class="work-cover">
-                            <img
-                                src="picture/summer.jpg"
-                                alt="夏日"
-                            >
-                        </div>
-
-                        <div class="work-name">
-                            <p class="song-title">
-                                夏日
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-
+                <p class="studio-desc">
+                    吊金钟是一个以城市为背景的叙事企划，
+                    用音乐和文字记录地铁里的故事、霓虹下的心事。
+                </p>
             </section>
 
         </div>
 
-    </div>
+        <!-- 右侧作品栏 -->
+        <aside class="home-sidebar">
 
-    <!-- 曲序页 -->
-    <div
-        id="page-playlist"
-        class="page"
-    >
+            <h3 class="sidebar-title">
+                已发行作品
+            </h3>
 
-        <div class="container">
-
-            <h2 class="section-title">
-                曲序
-            </h2>
-
-            <div class="playlist-table">
-
-                <div class="table-header">
-
-                    <div class="col-num">
-                        序号
-                    </div>
-
-                    <div class="col-cover">
-                        封面
-                    </div>
-
-                    <div class="col-title">
-                        歌曲名称
-                    </div>
-
-                    <div class="col-time">
-                        时间
-                    </div>
-
-                    <div class="col-age">
-                        年份
-                    </div>
-
-                    <div class="col-note">
-                        备注
-                    </div>
-
-                    <div class="col-play">
-                        播放
-                    </div>
-
-                </div>
-
-                <div id="playlist-body"></div>
-
+            <div class="sidebar-works" id="sidebar-works">
             </div>
 
-        </div>
+        </aside>
 
     </div>
+</div>
 
-    <!-- 专辑 / EP -->
-    <div
-        id="page-album"
-        class="page"
-    >
+<!-- 曲序页 -->
+<div id="page-playlist" class="page">
 
-        <div class="container">
+    <div class="container">
 
-            <h2 class="section-title">
-                专辑 / EP
-            </h2>
+        <h2 class="section-title">
+            地下室
+        </h2>
 
-            <!-- 专辑 -->
-            <section class="album-group">
+        <div class="playlist-table">
 
-                <h3 class="album-group-title">
-                    专辑
-                </h3>
+            <div class="table-header">
 
-                <div
-                    id="album-list"
-                    class="album-list"
-                ></div>
-
-            </section>
-
-            <!-- EP -->
-            <section class="album-group">
-
-                <h3 class="album-group-title">
-                    EP
-                </h3>
-
-                <div
-                    id="ep-list"
-                    class="album-list"
-                ></div>
-
-            </section>
-
-        </div>
-
-    </div>
-
-    <!-- 专辑详情页 -->
-    <div
-        id="page-album-detail"
-        class="page"
-    >
-
-        <div class="container">
-
-            <button
-                class="back-btn"
-                onclick="switchTab('album')"
-            >
-                ← 返回专辑列表
-            </button>
-
-            <div class="album-detail-header">
-
-                <div class="detail-cover">
-
-                    <img
-                        id="detail-album-cover"
-                        src=""
-                        alt="专辑封面"
-                    >
-
+                <div class="col-num">
+                    DxV-编号
                 </div>
 
-                <div class="detail-info">
+                <div class="col-title">
+                    中文名
+                </div>
 
-                    <h2
-                        id="detail-album-title"
-                    ></h2>
+                <div class="col-en-title">
+                    英文名
+                </div>
 
-                    <p
-                        id="detail-album-date"
-                    ></p>
+                <div class="col-creation">
+                    创作时间
+                </div>
 
-                    <p
-                        id="detail-album-style"
-                    ></p>
+                <div class="col-age">
+                    年龄
+                </div>
 
+                <div class="col-release">
+                    发行时间
+                </div>
+
+                <div class="col-style">
+                    风格
+                </div>
+
+                <div class="col-play">
+                    播放
+                </div>
+
+                <div class="col-lyrics">
+                    歌词详情
                 </div>
 
             </div>
 
-            <div class="album-tracklist">
-
-                <h3>
-                    曲目列表
-                </h3>
-
-                <div class="playlist-table album-track">
-
-                    <div class="table-header">
-
-                        <div class="col-num">
-                            序号
-                        </div>
-
-                        <div class="col-code">
-                            创作编号
-                        </div>
-
-                        <div class="col-title">
-                            歌曲名称
-                        </div>
-
-                        <div class="col-time">
-                            时间
-                        </div>
-
-                        <div class="col-play">
-                            播放
-                        </div>
-
-                    </div>
-
-                    <div
-                        id="tracklist-body"
-                    ></div>
-
-                </div>
-
-            </div>
+            <div id="playlist-body"></div>
 
         </div>
 
     </div>
 
-    <!-- 文学作品 -->
-    <div
-        id="page-literature"
-        class="page"
-    >
+</div>
 
-        <div class="container">
+<!-- 音乐作品页 -->
+<div id="page-work" class="page">
 
-            <h2 class="section-title">
-                文学作品
-            </h2>
+    <div class="container">
+
+        <h2 class="section-title">
+            餐厅 | 音乐作品
+        </h2>
+
+        <section class="work-group">
 
             <div
-                class="empty-content"
+                id="work-list"
+                class="album-list"
             ></div>
 
-        </div>
+        </section>
 
     </div>
 
-    <!-- 数据 -->
-    <script src="js/playlist.js"></script>
-    <script src="js/lyrics.js"></script>
-    <script src="js/album.js"></script>
+</div>
 
-    <!-- 主脚本 -->
-    <script src="script.js"></script>
+<!-- 音乐企划 -->
+<div id="page-project" class="page">
+
+    <div class="container">
+        <h2 class="section-title">
+            厨房 | 音乐企划
+        </h2>
+    </div>
+
+</div>
+
+<!-- 私人空间 -->
+<div id="page-private" class="page">
+
+    <div class="container">
+        <h2 class="section-title">
+            浴室 | 私人空间
+        </h2>
+    </div>
+
+</div>
+
+<!-- 文学作品 -->
+<div id="page-literature" class="page">
+
+    <div class="container">
+        <h2 class="section-title">
+            卧室 | 文学作品
+        </h2>
+    </div>
+
+</div>
+
+<!-- 歌词侧栏 -->
+<div id="lyrics-sidebar" class="lyrics-sidebar">
+
+    <div class="lyrics-header">
+
+        <h3 id="lyrics-title">
+            歌词
+        </h3>
+
+        <button onclick="closeLyricsSidebar()">
+            ×
+        </button>
+
+    </div>
+
+    <div
+        class="lyrics-body"
+        id="lyrics-body"
+    ></div>
+
+</div>
+
+<!-- 数据 -->
+<script src="js/longzu.js"></script>
+<script src="js/subway.js"></script>
+<script src="js/playlist.js"></script>
+<script src="js/lyrics.js"></script>
+<script src="js/album.js"></script>
+
+<!-- 主脚本 -->
+<script src="script.js"></script>
 
 </body>
 </html>
