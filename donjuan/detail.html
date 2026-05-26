@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>歌曲详情</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+</head>
+
+<body class="player-page">
+
+<!-- 返回栏 -->
+<div class="back-bar">
+
+    <button
+        class="back-btn"
+        id="backBtn"
+    >
+        ← 返回
+    </button>
+
+    <button
+        class="mini-btn"
+        id="miniBtn"
+    >
+        ─
+    </button>
+
+</div>
+
+<!-- 播放器 -->
+<div
+    class="detail-wrap"
+    id="detailWrap"
+>
+
+    <!-- 左侧 -->
+    <div class="detail-left">
+
+        <div class="player-cover">
+
+            <img
+                id="song-cover"
+                src="picture/zhanweifu.png"
+                alt="cover"
+            >
+
+        </div>
+
+        <div class="player-controls">
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    id="progress"
+                ></div>
+
+            </div>
+
+            <div class="control-row">
+
+                <span id="cur">
+                    00:00
+                </span>
+
+                <button
+                    id="playBtn"
+                    class="play-toggle"
+                >
+                    ▶
+                </button>
+
+                <span id="dur">
+                    00:00
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 右侧 -->
+    <div class="detail-right">
+
+        <div class="tab-buttons">
+
+            <button
+                class="tab-btn active"
+                onclick="switchTabDetail('lyrics')"
+            >
+                歌词
+            </button>
+
+            <button
+                class="tab-btn"
+                onclick="switchTabDetail('info')"
+            >
+                歌曲信息
+            </button>
+
+            <button
+                class="tab-btn"
+                onclick="switchTabDetail('note')"
+            >
+                创作手记
+            </button>
+
+        </div>
+
+        <!-- 歌词 -->
+        <div
+            id="tab-lyrics"
+            class="tab-content active"
+        >
+
+            <div
+                class="lyrics-box"
+                id="lyrics-content"
+            ></div>
+
+        </div>
+
+        <!-- 信息 -->
+        <div
+            id="tab-info"
+            class="tab-content"
+        >
+
+            <div class="info-box">
+
+                <p>
+                    <strong>歌曲：</strong>
+                    <span id="song-title"></span>
+                </p>
+
+                <p>
+                    <strong>歌手：</strong>
+                    唐璜 DonJuan
+                </p>
+
+                <p>
+                    <strong>时长：</strong>
+                    <span id="song-duration"></span>
+                </p>
+
+                <p>
+                    <strong>信息：</strong>
+                    <span id="song-info"></span>
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- 手记 -->
+        <div
+            id="tab-note"
+            class="tab-content"
+        >
+
+            <div
+                id="song-note"
+                class="note-box"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- mini player -->
+<div
+    class="mini-player"
+    id="miniPlayer"
+>
+
+    <button
+        id="miniPlayBtn"
+        class="mini-play-btn"
+    >
+        ▶
+    </button>
+
+    <div class="mini-song-info">
+
+        <div id="miniSongTitle">
+            未播放
+        </div>
+
+        <div class="mini-progress">
+
+            <div
+                id="miniProgress"
+                class="mini-progress-fill"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<audio id="audio"></audio>
+
+<!-- 数据 -->
+<script src="js/playlist.js"></script>
+<script src="js/lyrics.js"></script>
+
+<script>
+
+/* ==========================
+   参数
+========================== */
+
+const params =
+    new URLSearchParams(
+        location.search
+    );
+
+const title =
+    params.get("title");
+
+/* ==========================
+   数据读取
+========================== */
+
+let currentSong =
+    window.playlist?.find(
+        item =>
+            item.title === title
+    );
+
+let lyric =
+    window.lyricsData?.find(
+        item =>
+            item.title === title
+    );
+
+const DEFAULT_COVER =
+    "picture/zhanweifu.png";
+
+const TEST_AUDIO =
+    "music/summer.mp3";
+
+function getCoverPath(cover) {
+
+    if (
+        !cover ||
+        cover === "占位符"
+    ) {
+        return DEFAULT_COVER;
+    }
+
+    if (
+        cover.startsWith("picture/") ||
+        cover.startsWith("http://") ||
+        cover.startsWith("https://")
+    ) {
+        return cover;
+    }
+
+    return "picture/" + cover;
+}
+
+/* ==========================
+   DOM
+========================== */
+
+const audio =
+    document.getElementById(
+        "audio"
+    );
+
+const playBtn =
+    document.getElementById(
+        "playBtn"
+    );
+
+const miniPlayBtn =
+    document.getElementById(
+        "miniPlayBtn"
+    );
+
+const progress =
+    document.getElementById(
+        "progress"
+    );
+
+const progressBar =
+    document.querySelector(
+        ".progress-bar"
+    );
+
+const miniProgress =
+    document.getElementById(
+        "miniProgress"
+    );
+
+/* ==========================
+   初始化
+========================== */
+
+if (currentSong) {
+
+    document.getElementById(
+        "song-title"
+    ).innerText =
+        currentSong.title;
+
+    document.getElementById(
+        "miniSongTitle"
+    ).innerText =
+        currentSong.title;
+
+    document.getElementById(
+        "song-duration"
+    ).innerText =
+        currentSong.duration ||
+        "00:00";
+
+    document.getElementById(
+        "song-cover"
+    ).src =
+        getCoverPath(
+            currentSong.cover
+        );
+
+    audio.src =
+        currentSong.audio ||
+        TEST_AUDIO;
+}
+
+/* 歌词 */
+
+document.getElementById(
+    "lyrics-content"
+).innerText =
+    lyric?.lyrics ||
+    "暂无歌词";
+
+document.getElementById(
+    "song-info"
+).innerText =
+    lyric?.info ||
+    "暂无信息";
+
+document.getElementById(
+    "song-note"
+).innerText =
+    lyric?.note ||
+    "暂无创作手记";
+
+/* ==========================
+   播放器
+========================== */
+
+function fmt(t) {
+
+    if (isNaN(t))
+        return "00:00";
+
+    const m =
+        String(
+            Math.floor(t / 60)
+        ).padStart(2, "0");
+
+    const s =
+        String(
+            Math.floor(t % 60)
+        ).padStart(2, "0");
+
+    return `${m}:${s}`;
+}
+
+audio.onloadedmetadata =
+    () => {
+
+        document.getElementById(
+            "dur"
+        ).innerText =
+            fmt(audio.duration);
+    };
+
+audio.ontimeupdate =
+    () => {
+
+        updateProgress();
+    };
+
+function updateProgress() {
+
+        document.getElementById(
+            "cur"
+        ).innerText =
+            fmt(audio.currentTime);
+
+        if (
+            audio.duration
+        ) {
+
+            const percent =
+                audio.currentTime /
+                audio.duration *
+                100;
+
+            progress.style.width =
+                percent + "%";
+
+            miniProgress.style.width =
+                percent + "%";
+        }
+}
+
+function seekByClientX(clientX) {
+
+    if (!audio.duration)
+        return;
+
+    const rect =
+        progressBar.getBoundingClientRect();
+
+    const ratio =
+        Math.min(
+            1,
+            Math.max(
+                0,
+                (clientX - rect.left) / rect.width
+            )
+        );
+
+    audio.currentTime =
+        audio.duration * ratio;
+
+    updateProgress();
+}
+
+let isSeeking =
+    false;
+
+progressBar.addEventListener(
+    "pointerdown",
+    e => {
+
+        isSeeking =
+            true;
+
+        progressBar.setPointerCapture(
+            e.pointerId
+        );
+
+        seekByClientX(
+            e.clientX
+        );
+    }
+);
+
+progressBar.addEventListener(
+    "pointermove",
+    e => {
+
+        if (!isSeeking)
+            return;
+
+        seekByClientX(
+            e.clientX
+        );
+    }
+);
+
+progressBar.addEventListener(
+    "pointerup",
+    e => {
+
+        isSeeking =
+            false;
+
+        progressBar.releasePointerCapture(
+            e.pointerId
+        );
+    }
+);
+
+progressBar.addEventListener(
+    "pointercancel",
+    () => {
+
+        isSeeking =
+            false;
+    }
+);
+
+function togglePlay() {
+
+    if (audio.paused) {
+
+        audio.play();
+
+        playBtn.innerText =
+            "⏸";
+
+        miniPlayBtn.innerText =
+            "⏸";
+
+    } else {
+
+        audio.pause();
+
+        playBtn.innerText =
+            "▶";
+
+        miniPlayBtn.innerText =
+            "▶";
+    }
+}
+
+playBtn.onclick =
+    togglePlay;
+
+miniPlayBtn.onclick =
+    togglePlay;
+
+/* ==========================
+   返回
+========================== */
+
+document.getElementById(
+    "backBtn"
+).onclick =
+    () => {
+
+        history.back();
+    };
+
+/* ==========================
+   tab
+========================== */
+
+function switchTabDetail(tab) {
+
+    document
+    .querySelectorAll(
+        ".tab-content"
+    )
+    .forEach(
+        el =>
+            el.classList.remove(
+                "active"
+            )
+    );
+
+    document
+    .querySelectorAll(
+        ".tab-btn"
+    )
+    .forEach(
+        el =>
+            el.classList.remove(
+                "active"
+            )
+    );
+
+    document
+    .getElementById(
+        "tab-" + tab
+    )
+    .classList.add(
+        "active"
+    );
+
+    event.target
+    .classList.add(
+        "active"
+    );
+}
+
+/* ==========================
+   mini player
+========================== */
+
+document.getElementById(
+    "miniBtn"
+).onclick =
+    () => {
+
+        document
+        .getElementById(
+            "detailWrap"
+        )
+        .classList.add(
+            "is-minimized"
+        );
+
+        document
+        .getElementById(
+            "miniPlayer"
+        )
+        .classList.add(
+            "show"
+        );
+    };
+
+document.getElementById(
+    "miniPlayer"
+).onclick =
+    e => {
+
+        if (
+            e.target.id ===
+            "miniPlayBtn"
+        ) return;
+
+        document
+        .getElementById(
+            "detailWrap"
+        )
+        .classList.remove(
+            "is-minimized"
+        );
+
+        document
+        .getElementById(
+            "miniPlayer"
+        )
+        .classList.remove(
+            "show"
+        );
+    };
+
+</script>
+
+</body>
+</html>

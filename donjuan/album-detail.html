@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>作品详情 - 唐璜 DonJuan</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container album-detail-container">
+
+    <!-- 返回 -->
+    <button class="back-btn" id="backBtn">
+        ← 返回上一页
+    </button>
+
+    <!-- 专辑头部 -->
+    <div class="album-detail-header">
+
+        <div class="detail-cover">
+            <img
+                id="detail-album-cover"
+                src="picture/zhanweifu.png"
+                alt="cover"
+            >
+        </div>
+
+        <div class="detail-info">
+
+            <h1 id="detail-album-title"></h1>
+
+            <p id="detail-album-en-title"></p>
+
+            <p id="detail-album-date"></p>
+
+            <p id="detail-album-type"></p>
+
+            <p id="detail-album-info"></p>
+
+            <p id="detail-album-note"></p>
+
+        </div>
+
+    </div>
+
+    <!-- 曲目 -->
+    <div class="album-tracklist">
+
+        <h2>曲目列表</h2>
+
+        <div class="playlist-table album-track">
+
+            <div class="table-header">
+
+                <div class="col-num">序号</div>
+
+                <div class="col-title">歌曲名称</div>
+
+                <div class="col-en-title">英文名</div>
+
+                <div class="col-time">时长</div>
+
+                <div class="col-play">播放</div>
+
+                <div class="col-lyrics">歌词</div>
+
+            </div>
+
+            <div id="tracklist-body"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 歌词右侧侧栏 -->
+<div id="lyricsDrawer" class="lyrics-drawer">
+
+    <div class="drawer-header">
+
+        <h3 id="drawerSongTitle">
+            歌词
+        </h3>
+
+        <button id="closeDrawer">
+            ×
+        </button>
+
+    </div>
+
+    <div
+        id="drawerLyrics"
+        class="drawer-content"
+    >
+    </div>
+
+</div>
+
+<!-- 数据 -->
+<script src="js/album.js"></script>
+<script src="js/playlist.js"></script>
+<script src="js/lyrics.js"></script>
+
+<script>
+
+/* ==========================
+   获取 URL 参数
+========================== */
+
+function getAlbumTitle() {
+
+    const params =
+        new URLSearchParams(
+            location.search
+        );
+
+    return params.get("id");
+}
+
+const DEFAULT_COVER =
+    "picture/zhanweifu.png";
+
+function getCoverPath(cover) {
+
+    if (
+        !cover ||
+        cover === "占位符"
+    ) {
+        return DEFAULT_COVER;
+    }
+
+    if (
+        cover.startsWith("picture/") ||
+        cover.startsWith("http://") ||
+        cover.startsWith("https://")
+    ) {
+        return cover;
+    }
+
+    return "picture/" + cover;
+}
+
+/* ==========================
+   查找专辑
+========================== */
+
+function findAlbum(title) {
+
+    if (!window.album)
+        return null;
+
+    return window.album.find(
+        item =>
+            item.title === title
+    );
+}
+
+/* ==========================
+   查找歌曲
+========================== */
+
+function findSong(title) {
+
+    if (!window.playlist)
+        return null;
+
+    return window.playlist.find(
+        item =>
+            item.title === title
+    );
+}
+
+/* ==========================
+   查找歌词
+========================== */
+
+function findLyrics(title) {
+
+    if (!window.lyricsData)
+        return null;
+
+    return window.lyricsData.find(
+        item =>
+            item.title === title
+    );
+}
+
+/* ==========================
+   渲染页面
+========================== */
+
+function renderAlbum() {
+
+    const title =
+        decodeURIComponent(
+            getAlbumTitle() || ""
+        );
+
+    const albumData =
+        findAlbum(title);
+
+    if (!albumData) {
+
+        alert("未找到作品");
+
+        history.back();
+
+        return;
+    }
+
+    /* 基础信息 */
+
+    document.getElementById(
+        "detail-album-cover"
+    ).src =
+        getCoverPath(
+            albumData.cover
+        );
+
+    document.getElementById(
+        "detail-album-title"
+    ).innerText =
+        albumData.title;
+
+    document.getElementById(
+        "detail-album-en-title"
+    ).innerText =
+        albumData.englishTitle ||
+        "";
+
+    document.getElementById(
+        "detail-album-date"
+    ).innerText =
+        "发行时间：" +
+        (albumData.time || "未知");
+
+    document.getElementById(
+        "detail-album-type"
+    ).innerText =
+        "类型：" +
+        (albumData.type || "");
+
+    document.getElementById(
+        "detail-album-info"
+    ).innerText =
+        "曲数：" +
+        (albumData.info || "");
+
+    document.getElementById(
+        "detail-album-note"
+    ).innerText =
+        albumData.note || "";
+
+    /* 曲目 */
+
+    const body =
+        document.getElementById(
+            "tracklist-body"
+        );
+
+    body.innerHTML = "";
+
+    albumData.songs.forEach(
+        (songTitle, index) => {
+
+            const song =
+                findSong(
+                    songTitle
+                );
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "table-row";
+
+            row.innerHTML = `
+                <div class="col-num">
+                    ${index + 1}
+                </div>
+
+                <div class="col-title">
+                    ${songTitle}
+                </div>
+
+                <div class="col-en-title">
+                    ${
+                        song?.englishTitle
+                        || "-"
+                    }
+                </div>
+
+                <div class="col-time">
+                    ${
+                        song?.duration
+                        || "00:00"
+                    }
+                </div>
+
+                <div class="col-play">
+
+                    <button
+                        class="play-btn"
+                        onclick="goDetail('${songTitle}')"
+                    >
+                        播放
+                    </button>
+
+                </div>
+
+                <div class="col-lyrics">
+
+                    <button
+                        class="lyrics-btn"
+                        onclick="openLyrics('${songTitle}')"
+                    >
+                        查看
+                    </button>
+
+                </div>
+            `;
+
+            body.appendChild(row);
+        }
+    );
+}
+
+/* ==========================
+   跳转 detail
+========================== */
+
+function goDetail(title) {
+
+    location.href =
+        "detail.html?title=" +
+        encodeURIComponent(title);
+}
+
+/* ==========================
+   歌词侧栏
+========================== */
+
+function openLyrics(title) {
+
+    const lyrics =
+        findLyrics(title);
+
+    document.getElementById(
+        "drawerSongTitle"
+    ).innerText =
+        title;
+
+    document.getElementById(
+        "drawerLyrics"
+    ).innerText =
+        lyrics?.lyrics ||
+        "暂无歌词";
+
+    document.getElementById(
+        "lyricsDrawer"
+    ).classList.add(
+        "show"
+    );
+}
+
+/* ==========================
+   关闭歌词侧栏
+========================== */
+
+document
+.getElementById(
+    "closeDrawer"
+)
+.onclick = () => {
+
+    document
+    .getElementById(
+        "lyricsDrawer"
+    )
+    .classList.remove(
+        "show"
+    );
+};
+
+/* ==========================
+   返回上一页
+========================== */
+
+document
+.getElementById(
+    "backBtn"
+)
+.onclick = () => {
+
+    history.back();
+};
+
+/* ==========================
+   初始化
+========================== */
+
+window.onload =
+    renderAlbum;
+
+</script>
+
+</body>
+</html>
