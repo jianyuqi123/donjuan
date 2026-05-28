@@ -257,6 +257,36 @@ button{
     margin-bottom:28px;
 }
 
+.home-ticker{
+    height:42px;
+    margin-bottom:24px;
+    overflow:hidden;
+    border-top:1px solid rgba(255,255,255,.12);
+    border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.home-ticker-lines{
+    display:flex;
+    flex-direction:column;
+    animation:ticker-line 12s steps(4) infinite;
+}
+
+.home-ticker-lines span{
+    height:42px;
+    line-height:42px;
+    color:#f0f0f0;
+    font-size:15px;
+}
+
+@keyframes ticker-line{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(-168px);
+    }
+}
+
 .profile-avatar{
     width:120px;
     height:120px;
@@ -295,21 +325,25 @@ button{
 
 /* studio */
 
-.studio-section{
+.studio-section,
+.worldview-item{
     margin-bottom:34px;
 }
 
-.studio-title{
+.studio-title,
+.worldview-title{
     font-size:28px;
     margin-bottom:6px;
 }
 
-.studio-subtitle{
+.studio-subtitle,
+.worldview-en{
     color:#9f9f9f;
     margin-bottom:12px;
 }
 
-.studio-desc{
+.studio-desc,
+.worldview-desc{
     color:#d5d5d5;
     line-height:2;
 }
@@ -515,6 +549,346 @@ button{
 }
 
 /* =========================================
+   双栏内容页
+========================================= */
+
+.split-layout{
+    display:grid;
+    grid-template-columns:180px minmax(0,1fr);
+    gap:22px;
+    align-items:start;
+}
+
+.narrow-sidebar{
+    position:sticky;
+    top:96px;
+    background:#3a3a3a;
+    border-radius:16px;
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.content-panel{
+    min-width:0;
+}
+
+.side-check{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-height:44px;
+    padding:10px 12px;
+    border-radius:10px;
+    color:#e5e5e5;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.side-check:hover{
+    background:#464646;
+}
+
+.side-check input{
+    width:16px;
+    height:16px;
+    accent-color:#fff;
+}
+
+.side-check span{
+    font-size:14px;
+    line-height:1.4;
+}
+
+/* =========================================
+   企划页
+========================================= */
+
+.project-summary-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+}
+
+.project-summary-card,
+.project-detail-block{
+    background:#3a3a3a;
+    border-radius:16px;
+    padding:22px;
+}
+
+.project-summary-card h3,
+.project-detail-head h3{
+    font-size:22px;
+    margin-bottom:6px;
+}
+
+.project-en{
+    color:#9f9f9f;
+    font-size:13px;
+    margin-bottom:14px;
+}
+
+.project-info{
+    color:#d5d5d5;
+    line-height:1.9;
+}
+
+.project-detail-block + .project-detail-block{
+    margin-top:18px;
+}
+
+.project-detail-head{
+    padding-bottom:18px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    margin-bottom:16px;
+}
+
+.project-album-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.project-album-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px;
+    border-radius:12px;
+    background:#444;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.project-album-row:hover{
+    background:#505050;
+    transform:translateY(-1px);
+}
+
+.project-album-row img{
+    width:72px;
+    height:72px;
+    border-radius:10px;
+    object-fit:cover;
+    flex-shrink:0;
+}
+
+.project-album-row h4{
+    font-size:17px;
+    margin-bottom:4px;
+}
+
+.project-album-row p{
+    color:#aaa;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.project-album-row span{
+    color:#d6d6d6;
+    font-size:12px;
+}
+
+/* =========================================
+   私人空间
+========================================= */
+
+.private-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 340px;
+    gap:24px;
+    height:calc(100vh - 160px);
+    min-height:560px;
+}
+
+.friend-feed,
+.private-side{
+    min-height:0;
+    overflow:auto;
+}
+
+.friend-feed{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    padding-right:4px;
+}
+
+.friend-item{
+    background:#3a3a3a;
+    border-radius:16px;
+    padding:18px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.friend-item:hover{
+    background:#444;
+    transform:translateY(-1px);
+}
+
+.friend-time{
+    color:#9f9f9f;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.friend-item h3{
+    font-size:20px;
+    margin-bottom:8px;
+}
+
+.friend-excerpt{
+    color:#d8d8d8;
+    line-height:1.8;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+
+.friend-image-grid{
+    display:grid;
+    grid-template-columns:repeat(3,96px);
+    gap:8px;
+    margin-top:14px;
+}
+
+.friend-image-grid.single{
+    grid-template-columns:180px;
+}
+
+.friend-image-grid img{
+    width:96px;
+    height:96px;
+    border-radius:8px;
+    object-fit:cover;
+}
+
+.friend-image-grid.single img{
+    width:180px;
+    height:180px;
+}
+
+.private-side{
+    position:relative;
+    background:#3a3a3a;
+    border-radius:16px;
+}
+
+.calendar-card{
+    padding:18px;
+}
+
+.calendar-head,
+.friend-detail-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.calendar-head h3,
+.friend-detail-header h3{
+    font-size:19px;
+}
+
+.calendar-clear,
+.friend-detail-header button{
+    border:none;
+    background:#555;
+    color:#fff;
+    border-radius:999px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.calendar-clear{
+    padding:8px 14px;
+}
+
+.friend-detail-header button{
+    width:34px;
+    height:34px;
+    font-size:18px;
+    line-height:34px;
+}
+
+.calendar-clear:hover,
+.friend-detail-header button:hover{
+    background:#666;
+}
+
+.calendar-date-list{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+}
+
+.calendar-date{
+    border:none;
+    background:#484848;
+    color:#e8e8e8;
+    border-radius:10px;
+    padding:12px;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.calendar-date:hover,
+.calendar-date.active{
+    background:#fff;
+    color:#222;
+}
+
+.friend-detail-panel{
+    position:absolute;
+    inset:0;
+    background:#3a3a3a;
+    border-radius:16px;
+    display:none;
+    flex-direction:column;
+    padding:18px;
+    overflow:hidden;
+}
+
+.friend-detail-panel.show{
+    display:flex;
+}
+
+.friend-detail-body{
+    overflow:auto;
+    min-height:0;
+    color:#e0e0e0;
+    line-height:2;
+    white-space:pre-wrap;
+}
+
+.friend-detail-time{
+    color:#9f9f9f;
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+.friend-detail-images{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:18px;
+}
+
+.friend-detail-images img{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:10px;
+    object-fit:cover;
+}
+
+/* =========================================
    首页歌词侧栏
 ========================================= */
 
@@ -574,49 +948,6 @@ button{
    下拉菜单
 ========================================= */
 
-.work-nav-container{
-    position:relative;
-}
-
-.work-dropdown{
-    position:absolute;
-
-    top:58px;
-    left:0;
-
-    width:180px;
-
-    background:#444;
-
-    border-radius:16px;
-
-    overflow:hidden;
-
-    display:none;
-    flex-direction:column;
-
-    box-shadow:
-        0 12px 30px rgba(0,0,0,.22);
-}
-
-.work-nav-container:hover
-.work-dropdown{
-    display:flex;
-}
-
-.dropdown-item{
-    padding:12px 16px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.dropdown-item:hover{
-    background:#555;
-}
-
-.dropdown-item.multi-filter.active{
-    background:#666;
-}
 /* =========================================
    album-detail 页面
 ========================================= */
@@ -673,6 +1004,7 @@ button{
     flex:1;
 }
 
+.detail-info h1,
 .detail-info h2{
     font-size:42px;
     margin-bottom:10px;
@@ -689,14 +1021,75 @@ button{
     margin-bottom:20px;
 }
 
+.album-disc-title{
+    padding:18px 24px 10px;
+    color:#fff;
+    font-size:18px;
+    font-weight:700;
+    background:#3a3a3a;
+    border-top:1px solid rgba(255,255,255,.08);
+}
+
+.lyrics-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:380px;
+    max-width:100vw;
+    height:100vh;
+    background:#3a3a3a;
+    box-shadow:-12px 0 30px rgba(0,0,0,.28);
+    transform:translateX(100%);
+    transition:.25s ease;
+    z-index:10000;
+    display:flex;
+    flex-direction:column;
+}
+
+.lyrics-drawer.show{
+    transform:translateX(0);
+}
+
+.drawer-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:18px 20px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.drawer-header h3{
+    font-size:18px;
+}
+
+.drawer-header button{
+    border:none;
+    background:#555;
+    color:#fff;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.drawer-content{
+    padding:20px;
+    overflow:auto;
+    white-space:pre-line;
+    color:#e0e0e0;
+    line-height:2;
+}
+
 .album-track .table-header,
 .album-track .table-row{
     grid-template-columns:
         70px
-        150px
-        1fr
+        100px
+        minmax(150px,1.3fr)
         1fr
         100px
+        72px
         90px;
 }
 
@@ -1170,8 +1563,20 @@ button{
         content:"DxV-编号";
     }
 
+    .album-track .table-row .col-num::before{
+        content:"序号";
+    }
+
+    .table-row .col-dxv::before{
+        content:"DxV-编号";
+    }
+
     .table-row .col-title::before{
         content:"中文名";
+    }
+
+    .album-track .table-row .col-title::before{
+        content:"歌曲名称";
     }
 
     .table-row .col-en-title::before{
@@ -1202,12 +1607,29 @@ button{
         content:"歌词详情";
     }
 
+    .album-track .table-row .col-lyrics::before{
+        content:"歌词";
+    }
+
+    .album-track .table-row .col-time::before{
+        content:"时长";
+    }
+
     .col-play,
     .col-lyrics{
         text-align:right;
     }
 
     /* 作品页 */
+
+    .split-layout{
+        grid-template-columns:1fr;
+        gap:14px;
+    }
+
+    .narrow-sidebar{
+        position:static;
+    }
 
     .album-list{
         grid-template-columns:
@@ -1224,6 +1646,45 @@ button{
         font-size:12px;
     }
 
+    .project-summary-grid{
+        grid-template-columns:1fr;
+    }
+
+    .project-album-row{
+        align-items:flex-start;
+    }
+
+    .private-layout{
+        grid-template-columns:1fr;
+        height:auto;
+        min-height:0;
+    }
+
+    .friend-feed,
+    .private-side{
+        overflow:visible;
+    }
+
+    .friend-image-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .friend-image-grid img{
+        width:100%;
+        height:auto;
+        aspect-ratio:1/1;
+    }
+
+    .friend-detail-panel{
+        position:fixed;
+        top:120px;
+        right:0;
+        bottom:0;
+        left:0;
+        border-radius:0;
+        z-index:10000;
+    }
+
     /* album detail */
 
     .album-detail-header{
@@ -1236,6 +1697,7 @@ button{
         max-width:260px;
     }
 
+    .detail-info h1,
     .detail-info h2{
         font-size:30px;
     }

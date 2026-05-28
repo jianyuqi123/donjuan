@@ -58,9 +58,11 @@
 
                 <div class="col-num">序号</div>
 
-                <div class="col-title">歌曲名称</div>
+                <div class="col-dxv">DxV-编号</div>
 
-                <div class="col-en-title">英文名</div>
+                <div class="col-title">歌曲名</div>
+
+                <div class="col-en-title">外文名</div>
 
                 <div class="col-time">时长</div>
 
@@ -104,6 +106,7 @@
 <!-- 数据 -->
 <script src="js/album.js"></script>
 <script src="js/playlist.js"></script>
+<script src="js/other.js"></script>
 <script src="js/lyrics.js"></script>
 
 <script>
@@ -166,10 +169,12 @@ function findAlbum(title) {
 
 function findSong(title) {
 
-    if (!window.playlist)
-        return null;
+    const songs = [
+        ...(window.playlist || []),
+        ...(window.otherSongs || [])
+    ];
 
-    return window.playlist.find(
+    return songs.find(
         item =>
             item.title === title
     );
@@ -265,8 +270,33 @@ function renderAlbum() {
 
     body.innerHTML = "";
 
-    albumData.songs.forEach(
-        (songTitle, index) => {
+    const groups =
+        getAlbumTrackGroups(albumData);
+
+    let trackIndex =
+        0;
+
+    groups.forEach(
+        group => {
+
+            if (group.title) {
+
+                const discTitle =
+                    document.createElement("div");
+
+                discTitle.className =
+                    "album-disc-title";
+
+                discTitle.innerText =
+                    group.title;
+
+                body.appendChild(discTitle);
+            }
+
+            group.songs.forEach(
+                songTitle => {
+
+            trackIndex += 1;
 
             const song =
                 findSong(
@@ -283,7 +313,11 @@ function renderAlbum() {
 
             row.innerHTML = `
                 <div class="col-num">
-                    ${index + 1}
+                    ${trackIndex}
+                </div>
+
+                <div class="col-dxv">
+                    ${formatDxv(song, trackIndex)}
                 </div>
 
                 <div class="col-title">
@@ -307,10 +341,11 @@ function renderAlbum() {
                 <div class="col-play">
 
                     <button
-                        class="play-btn"
-                        onclick="goDetail('${songTitle}')"
+                        class="icon-action-btn play-btn"
+                        title="播放"
+                        aria-label="播放 ${escapeAttr(songTitle)}"
                     >
-                        播放
+                        ▶
                     </button>
 
                 </div>
@@ -318,18 +353,71 @@ function renderAlbum() {
                 <div class="col-lyrics">
 
                     <button
-                        class="lyrics-btn"
-                        onclick="openLyrics('${songTitle}')"
+                        class="icon-action-btn lyrics-btn"
+                        title="歌词"
+                        aria-label="查看 ${escapeAttr(songTitle)} 歌词"
                     >
-                        查看
+                        ♫
                     </button>
 
                 </div>
             `;
 
+            row
+                .querySelector(".play-btn")
+                .onclick =
+                () => goDetail(songTitle);
+
+            row
+                .querySelector(".lyrics-btn")
+                .onclick =
+                () => openLyrics(songTitle);
+
             body.appendChild(row);
+                }
+            );
         }
     );
+}
+
+function getAlbumTrackGroups(albumData) {
+
+    if (
+        Array.isArray(albumData.discs) &&
+        albumData.discs.length
+    ) {
+        return albumData.discs.map(
+            disc => ({
+                title: disc.title || "",
+                songs: disc.songs || []
+            })
+        );
+    }
+
+    return [
+        {
+            title: "",
+            songs: albumData.songs || []
+        }
+    ];
+}
+
+function formatDxv(song, fallbackIndex) {
+
+    const id =
+        song?.id || song?.dxv || fallbackIndex;
+
+    return `DxV-${String(id).padStart(3, "0")}`;
+}
+
+function escapeAttr(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
 /* ==========================

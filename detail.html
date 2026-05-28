@@ -215,6 +215,7 @@
 
 <!-- 数据 -->
 <script src="js/playlist.js"></script>
+<script src="js/other.js"></script>
 <script src="js/lyrics.js"></script>
 
 <script>
@@ -236,7 +237,10 @@ const title =
 ========================== */
 
 let currentSong =
-    window.playlist?.find(
+    [
+        ...(window.playlist || []),
+        ...(window.otherSongs || [])
+    ].find(
         item =>
             item.title === title
     );
@@ -390,6 +394,17 @@ audio.onloadedmetadata =
             "dur"
         ).innerText =
             fmt(audio.duration);
+    };
+
+audio.onerror =
+    () => {
+
+        if (
+            audio.src.endsWith(TEST_AUDIO)
+        ) return;
+
+        audio.src =
+            TEST_AUDIO;
     };
 
 audio.ontimeupdate =

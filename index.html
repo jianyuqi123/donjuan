@@ -23,15 +23,8 @@
             地下室
         </div>
 
-        <div class="nav-item work-nav-container" onclick="switchTab('work')">
+        <div class="nav-item" onclick="switchTab('work')">
             餐厅 | 音乐作品
-
-            <div class="work-dropdown">
-                <div class="dropdown-item multi-filter" data-type="all">全部作品</div>
-                <div class="dropdown-item multi-filter" data-type="album">专辑</div>
-                <div class="dropdown-item multi-filter" data-type="ep">EP</div>
-                <div class="dropdown-item multi-filter" data-type="single">单曲</div>
-            </div>
         </div>
 
         <div class="nav-item" onclick="switchTab('project')">
@@ -74,6 +67,16 @@
 
         <div class="home-main">
 
+            <div class="home-ticker" aria-label="滚动文字">
+                <div class="home-ticker-lines">
+                    <span>荣耀归于尼禄的海神</span>
+                    <span>泰坦尼克在今晨启航</span>
+                    <span>甲板上每个人都大吼</span>
+                    <span>“你站在哪一边？”</span>
+                    <span>荣耀归于尼禄的海神</span>
+                </div>
+            </div>
+
             <section class="profile-section">
 
                 <div class="profile-avatar">
@@ -85,7 +88,7 @@
 
                     <div class="profile-bio">
                         <p>
-                            独立音乐人，热爱旋律与文字，专注氛围感叙事创作。
+                            我有很多个名字，作为创作者时，我叫唐璜。
                         </p>
                     </div>
                 </div>
@@ -94,24 +97,7 @@
 
             <hr class="home-divider">
 
-            <section class="studio-section">
-                <h2 class="studio-title">关于水龙吟</h2>
-                <p class="studio-subtitle">Hydrogen Studio</p>
-
-                <p class="studio-desc">
-                    水龙吟是一个专注于氛围感叙事的音乐创作工作室，以细腻的旋律与文字为载体，
-                    记录城市里的温柔与遗憾。这里是所有声音的起点，也是故事的容器。
-                </p>
-            </section>
-
-            <section class="studio-section">
-                <h2 class="studio-title">关于吊金钟</h2>
-                <p class="studio-subtitle">Diaojinzhong</p>
-
-                <p class="studio-desc">
-                    吊金钟是一个以城市为背景的叙事企划，
-                    用音乐和文字记录地铁里的故事、霓虹下的心事。
-                </p>
+            <section class="worldview-list" id="worldview-list">
             </section>
 
         </div>
@@ -136,10 +122,6 @@
 
     <div class="container">
 
-        <h2 class="section-title">
-            地下室
-        </h2>
-
         <div class="playlist-table">
 
             <div class="table-header">
@@ -149,11 +131,11 @@
                 </div>
 
                 <div class="col-title">
-                    中文名
+                    歌曲名
                 </div>
 
                 <div class="col-en-title">
-                    英文名
+                    外文名
                 </div>
 
                 <div class="col-creation">
@@ -195,18 +177,35 @@
 
     <div class="container">
 
-        <h2 class="section-title">
-            餐厅 | 音乐作品
-        </h2>
+        <div class="split-layout">
 
-        <section class="work-group">
+            <aside class="narrow-sidebar work-filter-sidebar">
+                <label class="side-check">
+                    <input type="checkbox" class="work-type-filter" value="album">
+                    <span>专辑</span>
+                </label>
 
-            <div
-                id="work-list"
-                class="album-list"
-            ></div>
+                <label class="side-check">
+                    <input type="checkbox" class="work-type-filter" value="ep">
+                    <span>EP</span>
+                </label>
 
-        </section>
+                <label class="side-check">
+                    <input type="checkbox" class="work-type-filter" value="single">
+                    <span>单曲</span>
+                </label>
+            </aside>
+
+            <section class="work-group content-panel">
+
+                <div
+                    id="work-list"
+                    class="album-list"
+                ></div>
+
+            </section>
+
+        </div>
 
     </div>
 
@@ -216,9 +215,15 @@
 <div id="page-project" class="page">
 
     <div class="container">
-        <h2 class="section-title">
-            厨房 | 音乐企划
-        </h2>
+        <div class="split-layout">
+
+            <aside class="narrow-sidebar project-filter-sidebar" id="project-filter">
+            </aside>
+
+            <section class="project-content content-panel" id="project-content">
+            </section>
+
+        </div>
     </div>
 
 </div>
@@ -227,9 +232,27 @@
 <div id="page-private" class="page">
 
     <div class="container">
-        <h2 class="section-title">
-            浴室 | 私人空间
-        </h2>
+        <div class="private-layout">
+
+            <section class="friend-feed" id="friend-feed">
+            </section>
+
+            <aside class="private-side">
+                <div class="calendar-card" id="friend-calendar">
+                </div>
+
+                <div class="friend-detail-panel" id="friend-detail-panel">
+                    <div class="friend-detail-header">
+                        <h3 id="friend-detail-title">动态</h3>
+                        <button onclick="closeFriendDetail()">×</button>
+                    </div>
+
+                    <div class="friend-detail-body" id="friend-detail-body">
+                    </div>
+                </div>
+            </aside>
+
+        </div>
     </div>
 
 </div>
@@ -238,9 +261,7 @@
 <div id="page-literature" class="page">
 
     <div class="container">
-        <h2 class="section-title">
-            卧室 | 文学作品
-        </h2>
+        <div id="literature-list"></div>
     </div>
 
 </div>
@@ -271,8 +292,12 @@
 <script src="js/longzu.js"></script>
 <script src="js/subway.js"></script>
 <script src="js/playlist.js"></script>
+<script src="js/other.js"></script>
 <script src="js/lyrics.js"></script>
 <script src="js/album.js"></script>
+<script src="js/worldview.js"></script>
+<script src="js/project.js"></script>
+<script src="js/friend.js"></script>
 
 <!-- 主脚本 -->
 <script src="script.js"></script>

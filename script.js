@@ -127,9 +127,12 @@ function switchTab(page) {
       );
   }
 
-  // 记录 hash
-  location.hash =
-      `page-${page}`;
+  // 记录当前页，不触发浏览器锚点滚动。
+  history.replaceState(
+      null,
+      "",
+      `#page-${page}`
+  );
 }
 
 /* ==========================================
@@ -167,7 +170,11 @@ window.addEventListener(
 
       renderPlaylist();
       renderWork();
+      bindWorkFilters();
+      renderProjects();
+      renderFriends();
       renderSidebarWorks();
+      renderWorldview();
   }
 );
 
@@ -464,9 +471,89 @@ function renderWork() {
   ) return;
 
   renderAlbumList(
-      window.album,
+      getSortedAlbums(window.album),
       container
   );
+}
+
+function getAlbumTimeValue(item) {
+
+  const raw =
+      String(item?.time || "")
+          .replace(/\./g, "-")
+          .replace(/\//g, "-");
+
+  const value =
+      Date.parse(raw);
+
+  return Number.isNaN(value) ?
+      0 :
+      value;
+}
+
+function getSortedAlbums(data) {
+
+  return [...(data || [])].sort(
+      (a, b) =>
+          getAlbumTimeValue(b) -
+          getAlbumTimeValue(a)
+  );
+}
+
+function typeIncludes(item, type) {
+
+  return String(item?.type || "")
+      .toLowerCase()
+      .includes(type);
+}
+
+function applyWorkFilters() {
+
+  const container =
+      document.getElementById("work-list");
+
+  if (!container)
+      return;
+
+  const selected =
+      [
+          ...document.querySelectorAll(
+              ".work-type-filter:checked"
+          )
+      ].map(input => input.value);
+
+  let data =
+      window.album || [];
+
+  if (selected.length) {
+
+      data =
+          data.filter(
+              item =>
+                  selected.some(
+                      type =>
+                          typeIncludes(item, type)
+                  )
+          );
+  }
+
+  renderAlbumList(
+      getSortedAlbums(data),
+      container
+  );
+}
+
+function bindWorkFilters() {
+
+  document
+      .querySelectorAll(".work-type-filter")
+      .forEach(
+          input => {
+
+              input.onchange =
+                  applyWorkFilters;
+          }
+      );
 }
 
 function renderAlbumList(data, container) {
@@ -533,56 +620,472 @@ function renderSidebarWorks() {
  dropdown 分类
 ========================================== */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
 
-      const filters =
-          document.querySelectorAll(
-              ".multi-filter"
+/* ==========================================
+ 企划页
+========================================== */
+
+function getProjectAlbums(project) {
+
+  const titles =
+      project.albumTitles || [];
+
+  return titles
+      .map(
+          title =>
+              (window.album || [])
+                  .find(
+                      item =>
+                          item.title === title
+                  )
+      )
+      .filter(Boolean);
+}
+
+function createProjectSummary(project) {
+
+  const card =
+      document.createElement("article");
+
+  card.className =
+      "project-summary-card";
+
+  card.innerHTML = `
+      <h3>${project.title}</h3>
+      <p class="project-en">${project.englishTitle || ""}</p>
+      <p class="project-info">${project.info || ""}</p>
+  `;
+
+  return card;
+}
+
+function renderProjectContent(selectedTitles) {
+
+  const container =
+      document.getElementById("project-content");
+
+  if (!container)
+      return;
+
+  container.innerHTML =
+      "";
+
+  const projects =
+      window.projects || [];
+
+  const selectedProjects =
+      selectedTitles.length ?
+      projects.filter(
+          item =>
+              selectedTitles.includes(item.title)
+      ) :
+      projects;
+
+  if (!selectedTitles.length) {
+
+      const grid =
+          document.createElement("div");
+
+      grid.className =
+          "project-summary-grid";
+
+      selectedProjects.forEach(
+          project =>
+              grid.appendChild(
+                  createProjectSummary(project)
+              )
+      );
+
+      container.appendChild(grid);
+      return;
+  }
+
+  selectedProjects.forEach(
+      project => {
+
+          const section =
+              document.createElement("section");
+
+          section.className =
+              "project-detail-block";
+
+          const albums =
+              getProjectAlbums(project);
+
+          section.innerHTML = `
+              <div class="project-detail-head">
+                  <h3>${project.title}</h3>
+                  <p class="project-en">${project.englishTitle || ""}</p>
+                  <p class="project-info">${project.info || ""}</p>
+              </div>
+              <div class="project-album-list"></div>
+          `;
+
+          const list =
+              section.querySelector(".project-album-list");
+
+          albums.forEach(
+              item =>
+                  list.appendChild(
+                      createProjectAlbumRow(item)
+                  )
           );
 
-      filters.forEach(
-          btn => {
+          container.appendChild(section);
+      }
+  );
+}
 
-              btn.onclick =
-                  e => {
+function createProjectAlbumRow(item) {
 
-                      e.stopPropagation();
+  const row =
+      document.createElement("div");
 
-                      const type =
-                          btn.dataset.type;
+  row.className =
+      "project-album-row";
 
-                      const list =
-                          document.getElementById(
-                              "work-list"
-                          );
+  row.innerHTML = `
+      <img src="${getCoverPath(item.cover)}" alt="${item.title || "作品封面"}">
+      <div>
+          <h4>${item.title || "-"}</h4>
+          <p>${item.englishTitle || ""}</p>
+          <span>${item.type || ""} · ${item.time || ""}</span>
+      </div>
+  `;
 
-                      if (!list)
-                          return;
+  row.onclick =
+      () => goAlbumDetail(item.title);
 
-                      let data =
-                          window.album;
+  return row;
+}
 
-                      if (
-                          type !==
-                          "all"
-                      ) {
+function applyProjectFilters() {
 
-                          data =
-                              data.filter(
-                                  item =>
-                                      item.type ===
-                                      type
-                              );
-                      }
+  const selected =
+      [
+          ...document.querySelectorAll(
+              ".project-filter:checked"
+          )
+      ].map(input => input.value);
 
-                      renderAlbumList(
-                          data,
-                          list
-                      );
-                  };
+  renderProjectContent(selected);
+}
+
+function renderProjects() {
+
+  const filter =
+      document.getElementById("project-filter");
+
+  if (!filter)
+      return;
+
+  filter.innerHTML =
+      "";
+
+  (window.projects || []).forEach(
+      project => {
+
+          const label =
+              document.createElement("label");
+
+          label.className =
+              "side-check";
+
+          label.innerHTML = `
+              <input type="checkbox" class="project-filter" value="${escapeAttr(project.title)}">
+              <span>${project.title}</span>
+          `;
+
+          filter.appendChild(label);
+      }
+  );
+
+  filter
+      .querySelectorAll(".project-filter")
+      .forEach(
+          input => {
+
+              input.onchange =
+                  applyProjectFilters;
           }
       );
+
+  renderProjectContent([]);
+}
+
+/* ==========================================
+ 私人空间
+========================================== */
+
+let activeFriendDate =
+    "";
+
+function getFriendDate(item) {
+
+  return String(item.time || "")
+      .slice(0, 10);
+}
+
+function getSortedFriends() {
+
+  return [...(window.friends || [])].sort(
+      (a, b) =>
+          Date.parse(b.time) -
+          Date.parse(a.time)
+  );
+}
+
+function renderFriends(date = activeFriendDate) {
+
+  activeFriendDate =
+      date || "";
+
+  renderFriendCalendar();
+  renderFriendFeed();
+}
+
+function renderFriendFeed() {
+
+  const feed =
+      document.getElementById("friend-feed");
+
+  if (!feed)
+      return;
+
+  feed.innerHTML =
+      "";
+
+  let data =
+      getSortedFriends();
+
+  if (activeFriendDate) {
+
+      data =
+          data.filter(
+              item =>
+                  getFriendDate(item) ===
+                  activeFriendDate
+          );
   }
-);
+
+  if (!data.length) {
+
+      const empty =
+          document.createElement("div");
+
+      empty.className =
+          "empty-works";
+
+      empty.innerText =
+          "这一天暂无动态";
+
+      feed.appendChild(empty);
+      return;
+  }
+
+  data.forEach(
+      item =>
+          feed.appendChild(
+              createFriendItem(item)
+          )
+  );
+}
+
+function createFriendItem(item) {
+
+  const article =
+      document.createElement("article");
+
+  article.className =
+      "friend-item";
+
+  const images =
+      (item.images || []).slice(0, 9);
+
+  article.innerHTML = `
+      <div class="friend-time">${item.time || ""}</div>
+      <h3>${item.title || "-"}</h3>
+      <p class="friend-excerpt">${item.content || ""}</p>
+      <div class="friend-image-grid ${images.length === 1 ? "single" : ""}"></div>
+  `;
+
+  const grid =
+      article.querySelector(".friend-image-grid");
+
+  images.forEach(
+      src => {
+
+          const img =
+              document.createElement("img");
+
+          img.src =
+              src || "picture/zhanweifu.png";
+
+          img.alt =
+              item.title || "动态图片";
+
+          grid.appendChild(img);
+      }
+  );
+
+  if (!images.length) {
+      grid.remove();
+  }
+
+  article.onclick =
+      () => openFriendDetail(item);
+
+  return article;
+}
+
+function renderFriendCalendar() {
+
+  const calendar =
+      document.getElementById("friend-calendar");
+
+  if (!calendar)
+      return;
+
+  const dates =
+      [...new Set(
+          getSortedFriends()
+              .map(getFriendDate)
+      )];
+
+  calendar.innerHTML = `
+      <div class="calendar-head">
+          <h3>日历</h3>
+          <button class="calendar-clear" type="button">全部</button>
+      </div>
+      <div class="calendar-date-list"></div>
+  `;
+
+  calendar
+      .querySelector(".calendar-clear")
+      .onclick =
+      () => renderFriends("");
+
+  const list =
+      calendar.querySelector(".calendar-date-list");
+
+  dates.forEach(
+      date => {
+
+          const button =
+              document.createElement("button");
+
+          button.type =
+              "button";
+
+          button.className =
+              date === activeFriendDate ?
+              "calendar-date active" :
+              "calendar-date";
+
+          button.innerText =
+              date;
+
+          button.onclick =
+              () => renderFriends(date);
+
+          list.appendChild(button);
+      }
+  );
+}
+
+function openFriendDetail(item) {
+
+  const panel =
+      document.getElementById("friend-detail-panel");
+
+  const title =
+      document.getElementById("friend-detail-title");
+
+  const body =
+      document.getElementById("friend-detail-body");
+
+  if (!panel || !title || !body)
+      return;
+
+  title.innerText =
+      item.title || "动态";
+
+  const images =
+      (item.images || []).slice(0, 9);
+
+  body.innerHTML = `
+      <div class="friend-detail-time">${item.time || ""}</div>
+      <p>${item.content || ""}</p>
+      <div class="friend-detail-images"></div>
+  `;
+
+  const imageWrap =
+      body.querySelector(".friend-detail-images");
+
+  images.forEach(
+      src => {
+
+          const img =
+              document.createElement("img");
+
+          img.src =
+              src || "picture/zhanweifu.png";
+
+          img.alt =
+              item.title || "动态图片";
+
+          imageWrap.appendChild(img);
+      }
+  );
+
+  if (!images.length) {
+      imageWrap.remove();
+  }
+
+  panel.classList.add("show");
+}
+
+function closeFriendDetail() {
+
+  const panel =
+      document.getElementById("friend-detail-panel");
+
+  if (panel) {
+      panel.classList.remove("show");
+  }
+}
+
+/* ==========================================
+ 首页世界观
+========================================== */
+
+function renderWorldview() {
+
+  const container =
+      document.getElementById("worldview-list");
+
+  if (!container)
+      return;
+
+  container.innerHTML =
+      "";
+
+  (window.worldview || []).forEach(
+      item => {
+
+          const section =
+              document.createElement("section");
+
+          section.className =
+              "worldview-item";
+
+          section.innerHTML = `
+              <h2 class="worldview-title">关于${item.title || ""}</h2>
+              <p class="worldview-en">${item.englishTitle || ""}</p>
+              <p class="worldview-desc">${item.desc || ""}</p>
+          `;
+
+          container.appendChild(section);
+      }
+  );
+}
