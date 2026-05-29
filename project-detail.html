@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>音乐企划详情 - 唐璜 DonJuan</title>
+
+<script>
+if (localStorage.getItem("donjuan-theme") === "light") {
+    document.documentElement.classList.add("theme-light-preload");
+}
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="project-detail-page">
+
+<header class="back-bar">
+    <button class="mini-btn" onclick="location.href='index.html#page-project'">
+        返回音乐企划
+    </button>
+</header>
+
+<main class="project-detail-container">
+    <article class="project-detail-main">
+        <p id="project-detail-en" class="project-detail-en"></p>
+        <h1 id="project-detail-title"></h1>
+        <p id="project-detail-info"></p>
+        <div id="project-detail-article" class="project-detail-article"></div>
+    </article>
+
+    <aside class="project-detail-sidebar">
+        <h2>企划专辑</h2>
+        <div id="project-detail-albums"></div>
+    </aside>
+</main>
+
+<script src="js/album.js"></script>
+<script src="js/project.js"></script>
+<script src="js/theme.js"></script>
+<script>
+function getCoverPath(cover) {
+    if (!cover || cover === "占位符") return "picture/zhanweifu.png";
+    if (
+        cover.startsWith("picture/") ||
+        cover.startsWith("http://") ||
+        cover.startsWith("https://")
+    ) return cover;
+    return `picture/${cover}`;
+}
+
+function renderProjectDetail() {
+    const params = new URLSearchParams(location.search);
+    const title = params.get("id");
+    const project = (window.projects || [])
+        .find(item => item.title === title) ||
+        (window.projects || [])[0];
+
+    if (!project) return;
+
+    document.title = `${project.title} - 唐璜 DonJuan`;
+    document.getElementById("project-detail-en").innerText =
+        project.englishTitle || "";
+    document.getElementById("project-detail-title").innerText =
+        project.title || "";
+    document.getElementById("project-detail-info").innerText =
+        project.info || "";
+    document.getElementById("project-detail-article").innerText =
+        project.article || "暂无企划长文。";
+
+    const albumWrap =
+        document.getElementById("project-detail-albums");
+
+    albumWrap.innerHTML = "";
+
+    (project.albumTitles || [])
+        .map(albumTitle =>
+            (window.album || []).find(item => item.title === albumTitle)
+        )
+        .filter(Boolean)
+        .forEach(item => {
+            const row = document.createElement("a");
+            row.className = "project-detail-album-card";
+            row.href = `album-detail.html?id=${encodeURIComponent(item.title)}`;
+            row.innerHTML = `
+                <img src="${getCoverPath(item.cover)}" alt="${item.title}">
+                <div>
+                    <strong>${item.title}</strong>
+                    <span>${item.englishTitle || ""}</span>
+                    <small>${item.type || ""} · ${item.time || ""}</small>
+                </div>
+            `;
+            albumWrap.appendChild(row);
+        });
+}
+
+window.addEventListener("load", renderProjectDetail);
+</script>
+
+</body>
+</html>

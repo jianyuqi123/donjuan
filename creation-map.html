@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>创作地图 - 唐璜 DonJuan</title>
+
+<script>
+if (localStorage.getItem("donjuan-theme") === "light") {
+    document.documentElement.classList.add("theme-light-preload");
+}
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="creation-page-body">
+
+<header class="back-bar">
+    <button class="mini-btn" onclick="location.href='index.html#page-creation'">
+        返回创作地图
+    </button>
+</header>
+
+<main class="creation-map-page">
+    <section class="creation-stage-shell">
+        <div class="creation-stage-head">
+            <div>
+                <p id="creation-stage-kicker" class="creation-stage-kicker"></p>
+                <h1 id="creation-stage-title"></h1>
+                <p id="creation-stage-desc"></p>
+            </div>
+
+            <nav class="creation-stage-nav" aria-label="创作阶段切换">
+                <button type="button" data-stage="adolescence">
+                    进入青春期
+                </button>
+                <button type="button" data-stage="college">
+                    进入大学
+                </button>
+                <button type="button" data-stage="work">
+                    进入工作
+                </button>
+            </nav>
+        </div>
+
+        <div
+            id="creation-stage-map"
+            class="creation-stage-map"
+        ></div>
+    </section>
+</main>
+
+<script src="js/playlist.js"></script>
+<script src="js/album.js"></script>
+<script src="js/released.js"></script>
+<script src="js/creation-map.js"></script>
+<script src="js/theme.js"></script>
+<script>
+window.addEventListener("load", () => {
+    renderCreationStagePage();
+});
+</script>
+
+</body>
+</html>

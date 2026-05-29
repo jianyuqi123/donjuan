@@ -9,13 +9,19 @@
 
 <title>歌曲详情</title>
 
+<script>
+if (localStorage.getItem("donjuan-theme") === "light") {
+    document.documentElement.classList.add("theme-light-preload");
+}
+</script>
+
 <link
     rel="stylesheet"
     href="style.css"
 >
 </head>
 
-<body class="player-page">
+<body class="player-page detail-booting">
 
 <!-- 返回栏 -->
 <div class="back-bar">
@@ -36,13 +42,19 @@
 
 </div>
 
-<!-- 播放器 -->
+<iframe
+    id="siteFrame"
+    class="site-frame"
+    title="唐璜 DonJuan"
+    src="index.html#page-playlist"
+></iframe>
+
+<!-- 歌曲信息 -->
 <div
     class="detail-wrap"
     id="detailWrap"
 >
 
-    <!-- 左侧 -->
     <div class="detail-left">
 
         <div class="player-cover">
@@ -105,7 +117,7 @@
                 class="tab-btn"
                 onclick="switchTabDetail('info')"
             >
-                歌曲信息
+                credits
             </button>
 
             <button
@@ -179,7 +191,7 @@
 
 </div>
 
-<!-- mini player -->
+<!-- bottom player -->
 <div
     class="mini-player"
     id="miniPlayer"
@@ -198,6 +210,13 @@
             未播放
         </div>
 
+        <span
+            id="miniReleaseBadge"
+            class="release-badge inline"
+            aria-label="发行状态"
+        >
+        </span>
+
         <div class="mini-progress">
 
             <div
@@ -209,6 +228,14 @@
 
     </div>
 
+    <button
+        id="restorePlayerBtn"
+        class="mini-restore-btn"
+        type="button"
+    >
+        歌曲页
+    </button>
+
 </div>
 
 <audio id="audio"></audio>
@@ -217,6 +244,9 @@
 <script src="js/playlist.js"></script>
 <script src="js/other.js"></script>
 <script src="js/lyrics.js"></script>
+<script src="js/album.js"></script>
+<script src="js/released.js"></script>
+<script src="js/theme.js"></script>
 
 <script>
 
@@ -277,6 +307,17 @@ function getCoverPath(cover) {
     return "picture/" + cover;
 }
 
+function findSongByTitle(songTitle) {
+
+    return [
+        ...(window.playlist || []),
+        ...(window.otherSongs || [])
+    ].find(
+        item =>
+            item.title === songTitle
+    );
+}
+
 /* ==========================
    DOM
 ========================== */
@@ -311,11 +352,73 @@ const miniProgress =
         "miniProgress"
     );
 
+const siteFrame =
+    document.getElementById(
+        "siteFrame"
+    );
+
+const miniReleaseBadge =
+    document.getElementById(
+        "miniReleaseBadge"
+    );
+
+let frameScrollTop =
+    Number(
+        sessionStorage.getItem("donjuan-return-scroll") ||
+        0
+    );
+
+const returnPage =
+    sessionStorage.getItem("donjuan-return-page") ||
+    "#page-playlist";
+
 /* ==========================
    初始化
 ========================== */
 
-if (currentSong) {
+function loadSong(songTitle) {
+
+    currentSong =
+        findSongByTitle(songTitle);
+
+    lyric =
+        window.lyricsData?.find(
+            item =>
+                item.title === songTitle
+        );
+
+    if (!currentSong) {
+        document.body.classList.remove(
+            "detail-booting"
+        );
+        return;
+    }
+
+    const release =
+        typeof getSongReleaseInfo === "function" ?
+        getSongReleaseInfo(currentSong.title) :
+        null;
+
+    document.body.classList.toggle(
+        "is-unreleased-detail",
+        !release
+    );
+
+    document.body.classList.toggle(
+        "is-released-detail",
+        Boolean(release)
+    );
+
+    miniReleaseBadge.className =
+        `release-badge inline ${release?.accent || "draft"}`;
+
+    miniReleaseBadge.setAttribute(
+        "aria-label",
+        "发行标记"
+    );
+
+    miniReleaseBadge.innerText =
+        "";
 
     document.getElementById(
         "song-title"
@@ -343,6 +446,46 @@ if (currentSong) {
     audio.src =
         currentSong.audio ||
         TEST_AUDIO;
+
+    audio.currentTime =
+        0;
+
+    progress.style.width =
+        "0%";
+
+    miniProgress.style.width =
+        "0%";
+
+    document.getElementById(
+        "lyrics-content"
+    ).innerText =
+        lyric?.lyrics ||
+        "暂无歌词";
+
+    document.getElementById(
+        "song-info"
+    ).innerText =
+        lyric?.info ||
+        "暂无 credits";
+
+    document.getElementById(
+        "song-note"
+    ).innerText =
+        lyric?.note ||
+        "暂无创作手记";
+
+    document.body.classList.remove(
+        "detail-booting"
+    );
+
+    startPlayback();
+}
+
+if (currentSong) {
+
+    loadSong(
+        currentSong.title
+    );
 }
 
 /* 歌词 */
@@ -357,13 +500,190 @@ document.getElementById(
     "song-info"
 ).innerText =
     lyric?.info ||
-    "暂无信息";
+    "暂无 credits";
 
 document.getElementById(
     "song-note"
 ).innerText =
     lyric?.note ||
     "暂无创作手记";
+
+siteFrame.addEventListener(
+    "load",
+    () => {
+
+        let frameUrl;
+
+        try {
+            frameUrl =
+                new URL(
+                    siteFrame.contentWindow.location.href
+                );
+        } catch (error) {
+            return;
+        }
+
+        if (
+            !frameUrl.pathname.endsWith("detail.html")
+        ) {
+            injectFrameSongHandler();
+            restoreFrameScroll();
+            return;
+        }
+
+        const nextTitle =
+            frameUrl.searchParams.get("title");
+
+        if (!nextTitle)
+            return;
+
+        siteFrame.src =
+            `index.html${returnPage}`;
+
+        loadSong(nextTitle);
+    }
+);
+
+function rememberFrameScroll() {
+
+    try {
+        frameScrollTop =
+            siteFrame.contentWindow.scrollY ||
+            siteFrame.contentDocument.documentElement.scrollTop ||
+            0;
+    } catch (error) {
+        frameScrollTop =
+            0;
+    }
+}
+
+function restoreFrameScroll() {
+
+    try {
+        if (frameScrollTop) {
+            siteFrame.contentWindow.scrollTo(
+                0,
+                frameScrollTop
+            );
+        }
+    } catch (error) {}
+}
+
+window.handleEmbeddedPlaySong =
+    title => {
+
+        rememberFrameScroll();
+        loadSong(title);
+        history.replaceState(
+            null,
+            "",
+            `detail.html?title=${encodeURIComponent(title)}`
+        );
+        showSongDetail();
+    };
+
+window.addEventListener(
+    "message",
+    event => {
+        if (
+            event.data?.type !== "donjuan-play-song" ||
+            !event.data.title
+        ) {
+            return;
+        }
+
+        rememberFrameScroll();
+        loadSong(event.data.title);
+        history.replaceState(
+            null,
+            "",
+            `detail.html?title=${encodeURIComponent(event.data.title)}`
+        );
+        showSongDetail();
+    }
+);
+
+function injectFrameSongHandler() {
+
+    try {
+        const frameDoc =
+            siteFrame.contentDocument;
+
+        if (
+            !frameDoc ||
+            frameDoc.body.dataset.detailIntercepted === "true"
+        ) {
+            return;
+        }
+
+        frameDoc.body.dataset.detailIntercepted =
+            "true";
+
+        frameDoc.addEventListener(
+            "click",
+            event => {
+
+                const link =
+                    event.target.closest?.("a[href*='detail.html']");
+
+                const button =
+                    event.target.closest?.(".play-btn");
+
+                let nextTitle =
+                    "";
+
+                if (link) {
+                    const url =
+                        new URL(
+                            link.href,
+                            siteFrame.contentWindow.location.href
+                        );
+
+                    nextTitle =
+                        url.searchParams.get("title") || "";
+                }
+
+                if (!nextTitle && button) {
+                    const row =
+                        button.closest(".table-row");
+
+                    const titleCell =
+                        row?.querySelector(".col-title");
+
+                    nextTitle =
+                        button.dataset.title ||
+                        row?.dataset.title ||
+                        [...(titleCell?.childNodes || [])]
+                            .filter(node => node.nodeType === Node.TEXT_NODE)
+                            .map(node => node.textContent.trim())
+                            .join("")
+                            .trim() ||
+                        titleCell
+                            ?.textContent
+                            ?.trim()
+                            ?.replace(/\s+/g, " ") ||
+                        "";
+                }
+
+                if (!nextTitle)
+                    return;
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                rememberFrameScroll();
+                loadSong(nextTitle);
+                history.replaceState(
+                    null,
+                    "",
+                    `detail.html?title=${encodeURIComponent(nextTitle)}`
+                );
+                showSongDetail();
+            },
+            true
+        );
+    } catch (error) {}
+}
 
 /* ==========================
    播放器
@@ -539,6 +859,25 @@ function togglePlay() {
     }
 }
 
+function startPlayback() {
+
+    audio.play()
+        .then(() => {
+            playBtn.innerText =
+                "⏸";
+
+            miniPlayBtn.innerText =
+                "⏸";
+        })
+        .catch(() => {
+            playBtn.innerText =
+                "▶";
+
+            miniPlayBtn.innerText =
+                "▶";
+        });
+}
+
 playBtn.onclick =
     togglePlay;
 
@@ -554,7 +893,18 @@ document.getElementById(
 ).onclick =
     () => {
 
-        history.back();
+        sessionStorage.setItem(
+            "donjuan-restore-scroll",
+            "1"
+        );
+
+        sessionStorage.setItem(
+            "donjuan-return-scroll",
+            String(frameScrollTop || 0)
+        );
+
+        location.href =
+            `index.html${returnPage}`;
     };
 
 /* ==========================
@@ -599,57 +949,64 @@ function switchTabDetail(tab) {
     );
 }
 
-/* ==========================
-   mini player
-========================== */
+function showSongDetail() {
+    document.body.classList.remove(
+        "is-site-browsing"
+    );
+
+    document
+        .getElementById("miniPlayer")
+        .classList.remove("show");
+
+    siteFrame.src =
+        `index.html${returnPage}`;
+}
+
+function minimizeToSite() {
+    document.body.classList.add(
+        "is-site-browsing"
+    );
+
+    try {
+        const frameUrl =
+            new URL(siteFrame.contentWindow.location.href);
+
+        if (
+            frameUrl.pathname.endsWith("detail.html") ||
+            !frameUrl.hash.includes("page-playlist")
+        ) {
+            siteFrame.src =
+                `index.html${returnPage}`;
+        } else {
+            restoreFrameScroll();
+        }
+    } catch (error) {
+        siteFrame.src =
+            `index.html${returnPage}`;
+    }
+
+    document
+        .getElementById("miniPlayer")
+        .classList.add("show");
+}
+
+siteFrame.addEventListener(
+    "pointerdown",
+    rememberFrameScroll
+);
 
 document.getElementById(
     "miniBtn"
 ).onclick =
-    () => {
-
-        document
-        .getElementById(
-            "detailWrap"
-        )
-        .classList.add(
-            "is-minimized"
-        );
-
-        document
-        .getElementById(
-            "miniPlayer"
-        )
-        .classList.add(
-            "show"
-        );
-    };
+    minimizeToSite;
 
 document.getElementById(
-    "miniPlayer"
+    "restorePlayerBtn"
 ).onclick =
     e => {
 
-        if (
-            e.target.id ===
-            "miniPlayBtn"
-        ) return;
-
-        document
-        .getElementById(
-            "detailWrap"
-        )
-        .classList.remove(
-            "is-minimized"
-        );
-
-        document
-        .getElementById(
-            "miniPlayer"
-        )
-        .classList.remove(
-            "show"
-        );
+        e.stopPropagation();
+        showSongDetail();
     };
 
 </script>

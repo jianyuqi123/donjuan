@@ -76,7 +76,7 @@ const playlist = [
     { "id": 71, "cover": "占位符", "title": "酣欢", "duration": "1:00", "year": "2077.12", "age": 79, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
     { "id": 72, "cover": "占位符", "title": "橘子辉煌", "duration": "1:00", "year": "2078.12", "age": 80, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
     { "id": 73, "cover": "占位符", "title": "工厂大门", "duration": "1:00", "year": "2079.12", "age": 81, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
-    { "id": 74, "cover": "信.png", "title": "一封陌生女人的来信", "duration": "1:00", "year": "2080.12", "age": 82, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
+    { "id": 74, "cover": "信.png", "title": "一个陌生女人的来信", "duration": "1:00", "year": "2080.12", "age": 82, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
     { "id": 75, "cover": "占位符", "title": "双源记", "duration": "1:00", "year": "2081.12", "age": 83, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
     { "id": 76, "cover": "占位符", "title": "暴风雨", "duration": "1:00", "year": "2082.12", "age": 84, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },
     { "id": 77, "cover": "占位符", "title": "海岸线", "duration": "1:00", "year": "2083.12", "age": 85, "englishTitle": "", "release": "", "style": "", "audio": "", "note": "" },

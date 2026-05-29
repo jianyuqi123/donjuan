@@ -6,6 +6,11 @@
 
 <title>唐璜 DonJuan</title>
 
+<script>
+if (localStorage.getItem("donjuan-theme") === "light") {
+    document.documentElement.classList.add("theme-light-preload");
+}
+</script>
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,27 +21,38 @@
     <nav class="top-nav">
 
         <div class="nav-item active" onclick="switchTab('home')">
-            客厅 | 关于唐璜
+            <span>客厅</span>
+            <span>关于唐璜</span>
         </div>
 
         <div class="nav-item" onclick="switchTab('playlist')">
-            地下室
+            <span>地下室</span>
+            <span>词山曲海</span>
+        </div>
+
+        <div class="nav-item" onclick="switchTab('creation')">
+            <span>庭院</span>
+            <span>创作地图</span>
         </div>
 
         <div class="nav-item" onclick="switchTab('work')">
-            餐厅 | 音乐作品
+            <span>餐厅</span>
+            <span>音乐作品</span>
         </div>
 
         <div class="nav-item" onclick="switchTab('project')">
-            厨房 | 音乐企划
+            <span>厨房</span>
+            <span>音乐企划</span>
         </div>
 
         <div class="nav-item" onclick="switchTab('private')">
-            浴室 | 私人空间
+            <span>浴室</span>
+            <span>私人空间</span>
         </div>
 
         <div class="nav-item" onclick="switchTab('literature')">
-            卧室 | 文学作品
+            <span>卧室</span>
+            <span>文学作品</span>
         </div>
 
     </nav>
@@ -57,6 +73,16 @@
         ></div>
 
     </div>
+
+    <button
+        id="theme-toggle"
+        class="theme-toggle"
+        type="button"
+        aria-label="切换日夜模式"
+        title="切换日夜模式"
+    >
+        ☾
+    </button>
 
 </header>
 
@@ -106,7 +132,7 @@
         <aside class="home-sidebar">
 
             <h3 class="sidebar-title">
-                已发行作品
+                作品摘录
             </h3>
 
             <div class="sidebar-works" id="sidebar-works">
@@ -168,6 +194,37 @@
 
         </div>
 
+    </div>
+
+</div>
+
+<!-- 创作地图 -->
+<div id="page-creation" class="page">
+
+    <div class="container creation-overview-container">
+        <section class="creation-map-panel">
+            <div class="creation-map-head">
+                <div>
+                    <h1>创作地图</h1>
+                    <p>按青春期、大学、工作整理专辑与曲序。</p>
+                </div>
+            </div>
+
+            <div
+                id="creation-overview-map"
+                class="creation-overview-map"
+            ></div>
+
+            <div class="creation-map-actions">
+                <button
+                    id="creation-show-all"
+                    class="map-secondary-btn"
+                    type="button"
+                >
+                    显示全部
+                </button>
+            </div>
+        </section>
     </div>
 
 </div>
@@ -295,9 +352,13 @@
 <script src="js/other.js"></script>
 <script src="js/lyrics.js"></script>
 <script src="js/album.js"></script>
+<script src="js/released.js"></script>
+<script src="js/creation-map.js"></script>
 <script src="js/worldview.js"></script>
 <script src="js/project.js"></script>
+<script src="js/literature.js"></script>
 <script src="js/friend.js"></script>
+<script src="js/theme.js"></script>
 
 <!-- 主脚本 -->
 <script src="script.js"></script>

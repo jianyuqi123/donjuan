@@ -48,7 +48,20 @@ function createAlbumCard(item, compact = false) {
       "album-card compact" :
       "album-card";
 
+  const release =
+      typeof getReleasedWork === "function" ?
+      getReleasedWork(item.title) :
+      null;
+
+  if (release) {
+      card.classList.add(
+          "has-release-accent",
+          release.accent || "green"
+      );
+  }
+
   card.innerHTML = `
+      ${release ? `<span class="release-badge ${release.accent || ""}" aria-label="发行标记"></span>` : ""}
       <img
           class="album-card-cover"
           src="${getCoverPath(item.cover)}"
@@ -109,10 +122,11 @@ function switchTab(page) {
   const map = {
       home: 0,
       playlist: 1,
-      work: 2,
-      project: 3,
-      private: 4,
-      literature: 5
+      creation: 2,
+      work: 3,
+      project: 4,
+      private: 5,
+      literature: 6
   };
 
   if (
@@ -175,6 +189,24 @@ window.addEventListener(
       renderFriends();
       renderSidebarWorks();
       renderWorldview();
+      renderCreationOverview();
+      renderLiterature();
+
+      if (
+          sessionStorage.getItem("donjuan-restore-scroll") === "1"
+      ) {
+          sessionStorage.removeItem("donjuan-restore-scroll");
+
+          const y =
+              Number(
+                  sessionStorage.getItem("donjuan-return-scroll") ||
+                  0
+              );
+
+          requestAnimationFrame(
+              () => window.scrollTo(0, y)
+          );
+      }
   }
 );
 
@@ -208,17 +240,20 @@ function searchSong() {
       return;
   }
 
+  const titleMatches =
+      value =>
+          String(value || "")
+              .toLowerCase()
+              .includes(keyword);
+
   const matchedAlbums =
       (window.album || [])
       .filter(
           item =>
-              item.title
-              ?.toLowerCase()
-              .includes(keyword)
+              titleMatches(item.title)
       )
       .map(
           item => ({
-              type: "album",
               title: item.title,
               subtitle: item.englishTitle || item.time || "音乐作品",
               cover: item.cover,
@@ -227,16 +262,16 @@ function searchSong() {
       );
 
   const matchedSongs =
-      (window.playlist || [])
+      [
+          ...(window.playlist || []),
+          ...(window.otherSongs || [])
+      ]
       .filter(
           song =>
-              song.title
-              ?.toLowerCase()
-              .includes(keyword)
+              titleMatches(song.title)
       )
       .map(
           song => ({
-              type: "song",
               title: song.title,
               subtitle: song.year || song.duration || "歌曲",
               cover: song.cover,
@@ -244,13 +279,57 @@ function searchSong() {
           })
       );
 
-  const matched =
-      [
-          ...matchedAlbums,
-          ...matchedSongs
-      ].slice(0, 12);
+  const matchedProjects =
+      (window.projects || [])
+      .filter(
+          project =>
+              titleMatches(project.title)
+      )
+      .map(
+          project => ({
+              title: project.title,
+              subtitle: project.englishTitle || project.info || "音乐企划",
+              cover: "picture/zhanweifu.png",
+              url: `project-detail.html?id=${encodeURIComponent(project.title)}`
+          })
+      );
 
-  if (!matched.length) {
+  const matchedLiterature =
+      (window.literatureWorks || [])
+      .filter(
+          item =>
+              titleMatches(item.title)
+      )
+      .map(
+          item => ({
+              title: item.title,
+              subtitle: `${item.category || "文学"} · ${item.time || ""}`,
+              cover: "picture/zhanweifu.png",
+              url: "index.html#page-literature"
+          })
+      );
+
+  const groups =
+      [
+          {
+              title: "曲目",
+              items: matchedSongs.slice(0, 8)
+          },
+          {
+              title: "专辑 / EP",
+              items: matchedAlbums.slice(0, 8)
+          },
+          {
+              title: "企划",
+              items: matchedProjects.slice(0, 6)
+          },
+          {
+              title: "文学作品",
+              items: matchedLiterature.slice(0, 6)
+          }
+      ].filter(group => group.items.length);
+
+  if (!groups.length) {
 
       const empty =
           document.createElement("div");
@@ -269,7 +348,20 @@ function searchSong() {
       return;
   }
 
-  matched.forEach(item => {
+  groups.forEach(group => {
+
+      const title =
+          document.createElement("div");
+
+      title.className =
+          "search-group-title";
+
+      title.innerText =
+          group.title;
+
+      result.appendChild(title);
+
+      group.items.forEach(item => {
 
       const div =
           document.createElement(
@@ -286,7 +378,7 @@ function searchSong() {
           >
           <div class="search-result-text">
               <strong>${item.title}</strong>
-              <span>${item.type === "album" ? "作品" : "歌曲"} · ${item.subtitle}</span>
+              <span>${item.subtitle}</span>
           </div>
       `;
 
@@ -300,6 +392,7 @@ function searchSong() {
       result.appendChild(
           div
       );
+      });
   });
 
   result.style.display =
@@ -325,13 +418,23 @@ function renderPlaylist() {
   window.playlist.forEach(
       (song, index) => {
 
+          const release =
+              typeof getSongReleaseInfo === "function" ?
+              getSongReleaseInfo(song.title) :
+              null;
+
           const row =
               document.createElement(
                   "div"
               );
 
           row.className =
+              release ?
+              `table-row is-released ${release.accent || ""}` :
               "table-row";
+
+          row.dataset.title =
+              song.title || "";
 
           row.innerHTML = `
               <div class="col-num">
@@ -339,6 +442,7 @@ function renderPlaylist() {
               </div>
 
               <div class="col-title">
+                  ${release ? `<span class="release-badge inline ${release.accent || ""}" aria-label="发行标记"></span>` : ""}
                   ${song.title || "-"}
               </div>
 
@@ -366,6 +470,7 @@ function renderPlaylist() {
 
                   <button
                       class="icon-action-btn play-btn"
+                      data-title="${escapeAttr(song.title)}"
                       title="播放"
                       aria-label="播放 ${escapeAttr(song.title)}"
                   >
@@ -406,6 +511,42 @@ function renderPlaylist() {
 
 function playSong(title) {
 
+  if (
+      window.parent &&
+      window.parent !== window
+  ) {
+      try {
+          if (
+              typeof window.parent.handleEmbeddedPlaySong === "function"
+          ) {
+              window.parent.handleEmbeddedPlaySong(title);
+              return;
+          }
+      } catch (error) {}
+
+      try {
+          window.parent.postMessage(
+              {
+                  type: "donjuan-play-song",
+                  title
+              },
+              "*"
+          );
+      } catch (error) {}
+
+      return;
+  }
+
+  sessionStorage.setItem(
+      "donjuan-return-page",
+      location.hash || "#page-playlist"
+  );
+
+  sessionStorage.setItem(
+      "donjuan-return-scroll",
+      String(window.scrollY || 0)
+  );
+
   location.href =
       `detail.html?title=${encodeURIComponent(title)}`;
 }
@@ -426,15 +567,36 @@ function openLyricsSidebar(title) {
 
   document.getElementById(
       "lyrics-body"
-  ).innerText =
-      lyric?.lyrics ||
-      "暂无歌词";
+  ).innerHTML = `
+      <section class="lyrics-drawer-section">
+          <h4>歌词</h4>
+          <p>${escapeHtml(lyric?.lyrics || "暂无歌词")}</p>
+      </section>
+      <section class="lyrics-drawer-section">
+          <h4>credits</h4>
+          <p>${escapeHtml(lyric?.info || "暂无 credits")}</p>
+      </section>
+      <section class="lyrics-drawer-section">
+          <h4>创作手记</h4>
+          <p>${escapeHtml(lyric?.note || "暂无创作手记")}</p>
+      </section>
+  `;
 
   document.getElementById(
       "lyrics-sidebar"
   ).classList.add(
       "show"
   );
+}
+
+function escapeHtml(value) {
+
+  return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
 }
 
 function closeLyricsSidebar() {
@@ -603,17 +765,24 @@ function renderSidebarWorks() {
   container.innerHTML =
       "";
 
-  (window.album || []).forEach(
-      item => {
-
-          container.appendChild(
-              createAlbumCard(
-                  item,
-                  true
-              )
-          );
-      }
-  );
+  (window.releasedWorks || [])
+      .slice(0, 4)
+      .map(
+          work =>
+              (window.album || [])
+                  .find(item => item.title === work.title)
+      )
+      .filter(Boolean)
+      .forEach(
+          item => {
+              container.appendChild(
+                  createAlbumCard(
+                      item,
+                      true
+                  )
+              );
+          }
+      );
 }
 
 /* ==========================================
@@ -655,6 +824,12 @@ function createProjectSummary(project) {
       <p class="project-en">${project.englishTitle || ""}</p>
       <p class="project-info">${project.info || ""}</p>
   `;
+
+  card.onclick =
+      () => {
+          location.href =
+              `project-detail.html?id=${encodeURIComponent(project.title)}`;
+      };
 
   return card;
 }
@@ -717,9 +892,18 @@ function renderProjectContent(selectedTitles) {
                   <h3>${project.title}</h3>
                   <p class="project-en">${project.englishTitle || ""}</p>
                   <p class="project-info">${project.info || ""}</p>
+                  <button class="project-open-btn" type="button">进入企划页</button>
               </div>
               <div class="project-album-list"></div>
           `;
+
+          section
+              .querySelector(".project-open-btn")
+              .onclick =
+              () => {
+                  location.href =
+                      `project-detail.html?id=${encodeURIComponent(project.title)}`;
+              };
 
           const list =
               section.querySelector(".project-album-list");
@@ -795,6 +979,12 @@ function renderProjects() {
               <input type="checkbox" class="project-filter" value="${escapeAttr(project.title)}">
               <span>${project.title}</span>
           `;
+
+          label.ondblclick =
+              () => {
+                  location.href =
+                      `project-detail.html?id=${encodeURIComponent(project.title)}`;
+              };
 
           filter.appendChild(label);
       }
@@ -1088,4 +1278,64 @@ function renderWorldview() {
           container.appendChild(section);
       }
   );
+}
+
+/* ==========================================
+ 文学作品
+========================================== */
+
+function renderLiterature() {
+
+  const container =
+      document.getElementById("literature-list");
+
+  if (!container)
+      return;
+
+  const categories =
+      ["诗歌", "散文", "小说"];
+
+  container.innerHTML =
+      '<div class="literature-grid"></div>';
+
+  const grid =
+      container.querySelector(".literature-grid");
+
+  categories.forEach(category => {
+
+      const column =
+          document.createElement("section");
+
+      column.className =
+          "literature-column";
+
+      column.innerHTML = `
+          <h2>${category}</h2>
+          <div class="literature-card-list"></div>
+      `;
+
+      const list =
+          column.querySelector(".literature-card-list");
+
+      (window.literatureWorks || [])
+          .filter(item => item.category === category)
+          .forEach(item => {
+
+              const card =
+                  document.createElement("article");
+
+              card.className =
+                  "literature-card";
+
+              card.innerHTML = `
+                  <div class="literature-card-time">${item.time || ""}</div>
+                  <h3>${item.title || "-"}</h3>
+                  <p>${item.content || ""}</p>
+              `;
+
+              list.appendChild(card);
+          });
+
+      grid.appendChild(column);
+  });
 }

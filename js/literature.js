@@ -1,13 +1,58 @@
-// 专辑数据模板（新增：englishTitle）
-const liter = [
-    {
-      title: "自然历史",
-      englishTitle: "Natural History",
-      cover: "picture/zhanweifu.jpg",
-      type: "album",
-      time: "2026.8.21",
-      info:"这是文学作品内容"
-    }
-  ];
-  
-  window.liter = liter;
+const literatureWorks = [
+  {
+    category: "诗歌",
+    title: "雨后甲板",
+    time: "2025.04",
+    content: "雨停以后，城市像一艘刚刚靠岸的船。有人收起伞，有人把黄昏折进衣袋，像保存一张潮湿的票根。"
+  },
+  {
+    category: "诗歌",
+    title: "月台短诗",
+    time: "2025.09",
+    content: "末班车把灯光递给远处，风从轨道缝隙里醒来。我在站台边缘数星星，也数没有说出口的名字。"
+  },
+  {
+    category: "诗歌",
+    title: "旧日的河",
+    time: "2026.01",
+    content: "河水没有记性，却替我们保留倒影。少年离开以后，岸边的树仍然用绿色回答春天。"
+  },
+  {
+    category: "散文",
+    title: "关于夏天的备忘录",
+    time: "2025.06",
+    content: "我一直认为夏天不是季节，而是一种迟迟不愿结束的回声。它藏在冰汽水的瓶壁、地铁口的热风、以及深夜还亮着的便利店里。"
+  },
+  {
+    category: "散文",
+    title: "城市慢行",
+    time: "2025.11",
+    content: "有些路适合赶时间，有些路适合把自己找回来。穿过两条梧桐街以后，噪声变得柔软，连红绿灯也像在提醒人慢一点。"
+  },
+  {
+    category: "散文",
+    title: "房间里的地图",
+    time: "2026.02",
+    content: "墙上没有真正的地图，只有一些写满日期的纸。它们把一段生活钉在原处，使我在离开很远以后仍能辨认回家的方向。"
+  },
+  {
+    category: "小说",
+    title: "第七站来信",
+    time: "2025.10",
+    content: "她在第七站下车前把信塞给我，说如果下一次还遇见，就把结尾补上。车门合拢时，我才发现信封上没有署名。"
+  },
+  {
+    category: "小说",
+    title: "无人认领的月亮",
+    time: "2026.03",
+    content: "镇上的人都说月亮丢了，只有杂货铺老板坚持每晚开灯。他说总有一天，有人会带着一张旧收据回来认领它。"
+  },
+  {
+    category: "小说",
+    title: "小城放映员",
+    time: "2026.05",
+    content: "老放映员退休那天，全城停电。于是他坐在空白银幕前，给孩子们讲了一场没有影像的电影。"
+  }
+];
+
+window.literatureWorks = literatureWorks;
